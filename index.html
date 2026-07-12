@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oryxon — Technology that moves people forward</title>
+<meta name="description" content="Oryxon builds world-class digital products. Creator of Mekina, the UK driving theory app in Amharic and Tigrinya.">
+<meta property="og:title" content="Oryxon">
+<meta property="og:description" content="Technology that moves people forward.">
+<meta property="og:url" content="https://oryxon.co.uk">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #070707;
+  --blue: #00C2FF;
+  --green: #00E87A;
+  --purple: #8B5CF6;
+  --text: #f0f0f0;
+  --muted: rgba(240,240,240,0.35);
+  --glass: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.07);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* CURSOR */
+#cursor {
+  position: fixed; width: 8px; height: 8px;
+  background: var(--blue); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid rgba(0,194,255,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 32px 56px;
+  transition: padding 0.4s, background 0.4s;
+}
+nav.scrolled {
+  padding: 18px 56px;
+  background: rgba(7,7,7,0.8);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+}
+.nav-logo em { color: var(--blue); font-style: normal; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  font-size: 12px; font-weight: 400; letter-spacing: 0.06em;
+  color: rgba(240,240,240,0.4); text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-contact {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+  color: var(--blue); text-decoration: none; opacity: 0.75; transition: opacity 0.2s;
+}
+.nav-contact:hover { opacity: 1; }
+
+/* PAGE TRANSITIONS */
+.page-wrap {
+  opacity: 0;
+  animation: pageIn 0.7s ease forwards;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTION UTILS */
+.section-label {
+  display: block; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); margin-bottom: 20px;
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #000; background: var(--blue); text-decoration: none;
+  padding: 14px 36px; border-radius: 100px; transition: all 0.25s;
+  border: none; cursor: none;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,194,255,0.35); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+  padding: 14px 36px; border-radius: 100px;
+  border: 1px solid var(--border); transition: all 0.25s; cursor: none;
+}
+.btn-ghost:hover { border-color: rgba(0,194,255,0.4); color: var(--blue); background: rgba(0,194,255,0.05); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 44px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-logo { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.footer-logo em { color: var(--blue); font-style: normal; }
+.footer-links { display: flex; gap: 28px; list-style: none; }
+.footer-links a { font-size: 11px; color: rgba(240,240,240,0.25); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(240,240,240,0.5); }
+.footer-copy { font-size: 11px; color: rgba(240,240,240,0.2); letter-spacing: 0.05em; }
+
+/* GLASS CARD */
+.glass-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+}
+
+/* APP STORE BTN */
+.appstore-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 12px 22px;
+  text-decoration: none; color: var(--text); opacity: 0.4;
+  pointer-events: none; cursor: default;
+  transition: none;
+}
+.appstore-btn svg { flex-shrink: 0; }
+.appstore-btn-text { display: flex; flex-direction: column; gap: 1px; }
+.appstore-btn-sub { font-size: 9px; font-weight: 400; letter-spacing: 0.06em; opacity: 0.7; }
+.appstore-btn-label { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+
+@media (max-width: 900px) {
+  nav { padding: 20px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+  .nav-links { display: none; }
+  footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+<style>
+/* ── PHASE 1 NETWORK ── */
+#phase-network {
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--void);
+  transition: opacity 1s ease;
+}
+#phase-network.exiting { opacity: 0; pointer-events: none; }
+#network-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.emergent-word {
+  position: absolute;
+  font-family: var(--sans); font-weight: 200; font-size: 10px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(0,194,255,0); pointer-events: none;
+  transition: color 1.2s ease;
+  white-space: nowrap;
+}
+.emergent-word.visible { color: rgba(0,194,255,0.45); }
+
+#oryxon-reveal {
+  position: absolute; display: flex; gap: 0;
+  pointer-events: none; opacity: 1;
+  /* centered by JS */
+}
+.oryxon-letter {
+  font-family: var(--serif);
+  font-size: clamp(64px, 10vw, 130px);
+  font-weight: 400; letter-spacing: 0.01em;
+  color: var(--text); opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.65s ease, transform 0.65s ease, color 0.4s;
+}
+
+#enter-btn {
+  position: absolute; bottom: 12vh; left: 50%;
+  transform: translateX(-50%);
+  opacity: 0; transition: opacity 0.9s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  cursor: none; pointer-events: none;
+}
+#enter-btn.visible { opacity: 1; pointer-events: all; }
+#enter-btn .enter-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.26em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+}
+.enter-line {
+  width: 1px; height: 0;
+  background: linear-gradient(to bottom, rgba(0,194,255,0.5), transparent);
+  transition: height 1s ease 0.3s;
+}
+#enter-btn.visible .enter-line { height: 48px; }
+
+/* ── AMBIENT BG CANVAS ── */
+#ambient-canvas {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0; transition: opacity 1.2s ease;
+}
+#ambient-canvas.active { opacity: 1; }
+
+/* ── MAIN CONTENT ── */
+#main-content {
+  position: relative; z-index: 2;
+  opacity: 0; pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+#main-content.active { opacity: 1; pointer-events: all; }
+
+/* ── ASYMMETRIC HERO ── */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 0 0 8vw;
+  position: relative;
+  overflow: hidden;
+}
+.hero-left {
+  padding: 120px 60px 120px 0;
+  position: relative; z-index: 2;
+}
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 44px;
+}
+.hero-eyebrow-line { width: 28px; height: 1px; background: var(--blue); opacity: 0.6; }
+.hero-eyebrow-text {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--blue); opacity: 0.8;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(48px, 5.5vw, 80px);
+  font-weight: 400; line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin-bottom: 36px;
+}
+.hero-title em { font-style: italic; color: var(--blue); }
+
+.hero-sub {
+  font-size: 15px; font-weight: 300; line-height: 1.9;
+  color: rgba(240,240,240,0.45); max-width: 380px;
+  margin-bottom: 52px;
+}
+.hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+
+.hero-right {
+  position: relative; height: 100vh;
+  display: flex; align-items: center; justify-content: flex-end;
+}
+#hero-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+/* Product nodes overlay */
+.hero-nodes {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+.hero-node {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.hero-node.visible { opacity: 1; }
+.node-ring {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid;
+  position: relative;
+}
+.node-ring::before {
+  content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid; opacity: 0.2;
+}
+.node-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.node-status {
+  font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.5;
+}
+
+.node-green .node-ring { border-color: rgba(0,232,122,0.4); background: rgba(0,232,122,0.06); }
+.node-green .node-ring::before { border-color: var(--green); }
+.node-green .node-label { color: var(--green); }
+.node-purple .node-ring { border-color: rgba(139,92,246,0.4); background: rgba(139,92,246,0.06); }
+.node-purple .node-ring::before { border-color: var(--purple); }
+.node-purple .node-label { color: var(--purple); }
+.node-blue .node-ring { border-color: rgba(0,194,255,0.4); background: rgba(0,194,255,0.06); }
+.node-blue .node-ring::before { border-color: var(--blue); }
+.node-blue .node-label { color: var(--blue); }
+
+/* ── SCROLL SECTIONS ── */
+.world-section { position: relative; z-index: 2; min-height: 100vh; padding: 0; }
+.world-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; overflow: hidden; }
+
+.world-left {
+  width: 50%; padding: 0 0 0 8vw; position: relative; z-index: 3;
+}
+.world-right {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 52%;
+}
+.world-right canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.world-tag {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px; margin-bottom: 28px;
+  opacity: 0; transform: translateX(-16px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.world-tag.in { opacity: 1; transform: translateX(0); }
+.tag-green { background: rgba(0,232,122,0.1); color: var(--green); border: 1px solid rgba(0,232,122,0.2); }
+.tag-purple { background: rgba(139,92,246,0.1); color: var(--purple); border: 1px solid rgba(139,92,246,0.2); }
+.tag-blue { background: rgba(0,194,255,0.1); color: var(--blue); border: 1px solid rgba(0,194,255,0.2); }
+
+.world-name {
+  font-family: var(--serif);
+  font-size: clamp(52px, 7vw, 100px);
+  font-weight: 400; letter-spacing: -0.025em; line-height: 1;
+  margin-bottom: 20px;
+  opacity: 0; transform: translateX(-24px);
+  transition: opacity 1s ease 0.1s, transform 1s ease 0.1s;
+}
+.world-name.in { opacity: 1; transform: translateX(0); }
+
+.world-desc {
+  font-size: 14px; font-weight: 300; line-height: 1.9;
+  color: rgba(240,240,240,0.4); max-width: 340px; margin-bottom: 36px;
+  opacity: 0; transform: translateX(-16px);
+  transition: opacity 1s ease 0.2s, transform 1s ease 0.2s;
+}
+.world-desc.in { opacity: 1; transform: translateX(0); }
+
+.world-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none;
+  opacity: 0; transform: translateX(-16px);
+  transition: opacity 1s ease 0.35s, transform 1s ease 0.35s, color 0.2s;
+}
+.world-cta.in { opacity: 1; transform: translateX(0); }
+.cta-green { color: var(--green); }
+.cta-purple { color: var(--purple); }
+.cta-blue { color: var(--blue); }
+.world-cta span { transition: transform 0.2s; }
+.world-cta:hover span { transform: translateX(5px); }
+
+/* ── STATEMENTS SECTION ── */
+#statements {
+  position: relative; z-index: 2;
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 120px 8vw;
+}
+.statement-lines { max-width: 860px; }
+.statement-line {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 54px);
+  font-weight: 400; line-height: 1.2; letter-spacing: -0.02em;
+  padding: 28px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: rgba(240,240,240,0.1);
+  transition: color 0.9s ease;
+}
+.statement-line:first-child { border-top: 1px solid rgba(255,255,255,0.04); }
+.statement-line.lit { color: var(--text); }
+.statement-line em { font-style: italic; color: var(--blue); }
+
+/* ── CLOSING ── */
+#closing {
+  position: relative; z-index: 2;
+  min-height: 80vh; display: flex; align-items: center;
+  padding: 120px 8vw;
+}
+.closing-inner { max-width: 600px; }
+.closing-title {
+  font-family: var(--serif);
+  font-size: clamp(40px, 5vw, 72px); font-weight: 400;
+  line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 28px;
+}
+.closing-title em { font-style: italic; color: var(--blue); }
+.closing-sub {
+  font-size: 15px; font-weight: 300; line-height: 1.9;
+  color: rgba(240,240,240,0.4); margin-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  #hero { grid-template-columns: 1fr; padding: 120px 24px 80px; }
+  .hero-right { display: none; }
+  .hero-left { padding: 0; }
+  .world-left { width: 100%; padding: 0 24px; }
+  .world-right { display: none; }
+  #statements { padding: 80px 24px; }
+  #closing { padding: 80px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ===== PHASE 1: NETWORK ===== -->
+<div id="phase-network">
+  <canvas id="network-canvas"></canvas>
+  <div id="oryxon-reveal">
+    <span class="oryxon-letter">O</span><span class="oryxon-letter">r</span><span class="oryxon-letter">y</span><span class="oryxon-letter">x</span><span class="oryxon-letter">o</span><span class="oryxon-letter">n</span>
+  </div>
+  <div id="enter-btn">
+    <div class="enter-line"></div>
+    <span class="enter-label">Enter</span>
+  </div>
+</div>
+
+<!-- ===== AMBIENT ===== -->
+<canvas id="ambient-canvas"></canvas>
+
+<!-- ===== NAV ===== -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Oryxon<em>.</em></a>
+  <ul class="nav-links">
+    <li><a href="products/index.html">Products</a></li>
+    <li><a href="mekina/index.html">Mekina</a></li>
+    <li><a href="fitopia/index.html">Fitopia</a></li>
+    <li><a href="about/index.html">About</a></li>
+    <li><a href="careers/index.html">Careers</a></li>
+  </ul>
+  <a href="contact/index.html" class="nav-contact">Contact</a>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div id="main-content">
+
+  <!-- HERO: asymmetric 2-col -->
+  <section id="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow reveal">
+        <div class="hero-eyebrow-line"></div>
+        <span class="hero-eyebrow-text">Birmingham · Est. 2025</span>
+      </div>
+      <h1 class="hero-title reveal">
+        Technology<br>that <em>moves</em><br>people forward.
+      </h1>
+      <p class="hero-sub reveal">
+        We build digital products with precision and purpose. Every product we ship is designed to perform, built to last, and made to make a real difference in people's lives.
+      </p>
+      <div class="hero-actions reveal">
+        <a href="products/index.html" class="btn-primary">Our products</a>
+        <a href="about/index.html" class="btn-ghost">How we think</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-nodes" id="hero-nodes">
+        <div class="hero-node node-green" style="top:28%;left:18%;">
+          <div class="node-ring">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 4 5 4 9c0 5 8 13 8 13s8-8 8-13c0-4-3.5-7-8-7z" stroke="#00E87A" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="9" r="2" stroke="#00E87A" stroke-width="1.5"/></svg>
+          </div>
+          <span class="node-label">Mekina</span>
+          <span class="node-status">Live</span>
+        </div>
+        <div class="hero-node node-purple" style="top:52%;left:60%;">
+          <div class="node-ring">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8B5CF6" stroke-width="1.5"/><path d="M12 8v4l3 2" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="node-label">Fitopia</span>
+          <span class="node-status">Soon</span>
+        </div>
+        <div class="hero-node node-blue" style="top:74%;left:24%;">
+          <div class="node-ring">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.5 7.5H22l-6.5 4.5 2.5 7.5L12 17l-6 4.5 2.5-7.5L2 9.5h7.5L12 2z" stroke="#00C2FF" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="node-label">Next</span>
+          <span class="node-status">Building</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEKINA WORLD -->
+  <div class="world-section" style="height:200vh;" id="mekina-world">
+    <div class="world-sticky">
+      <div class="world-left">
+        <div class="world-tag tag-green reveal-world">DVSA Licensed &middot; Live Now</div>
+        <div class="world-name reveal-world" style="color:var(--green)">Mekina</div>
+        <p class="world-desc reveal-world">The only UK driving theory test app built in Amharic and Tigrinya. 758 official questions. Unlimited mock tests. Everything you need to pass, in the language you think in.</p>
+        <a href="mekina/index.html" class="world-cta cta-green reveal-world">Explore Mekina <span>→</span></a>
+      </div>
+      <div class="world-right"><canvas id="mekina-canvas"></canvas></div>
+    </div>
+  </div>
+
+  <!-- FITOPIA WORLD -->
+  <div class="world-section" style="height:200vh;" id="fitopia-world">
+    <div class="world-sticky">
+      <div class="world-left">
+        <div class="world-tag tag-purple reveal-world">Coming Soon</div>
+        <div class="world-name reveal-world" style="color:var(--purple)">Fitopia</div>
+        <p class="world-desc reveal-world">An AI-powered fitness and nutrition platform built to actually fit your life. Personalised training plans, smart meal guidance, and nutrition that works with your food — not against it.</p>
+        <a href="fitopia/index.html" class="world-cta cta-purple reveal-world">Learn more <span>→</span></a>
+      </div>
+      <div class="world-right"><canvas id="fitopia-canvas"></canvas></div>
+    </div>
+  </div>
+
+  <!-- STATEMENTS -->
+  <section id="statements">
+    <div class="statement-lines">
+      <div class="statement-line">Every product we ship is <em>thought through.</em></div>
+      <div class="statement-line">We build things that actually work.</div>
+      <div class="statement-line">We are here to help people <em>get results.</em></div>
+      <div class="statement-line">And we are only getting started.</div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section id="closing">
+    <div class="closing-inner">
+      <span class="section-label reveal">Join us</span>
+      <h2 class="closing-title reveal">Work on things<br>that <em>endure.</em></h2>
+      <p class="closing-sub reveal">We hold ourselves to a high standard and look for people who do the same. If you care about craft and long-term impact, we want to hear from you.</p>
+      <div class="reveal">
+        <a href="contact/index.html" class="btn-ghost">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Oryxon<em>.</em></div>
+    <ul class="footer-links">
+      <li><a href="products/index.html">Products</a></li>
+      <li><a href="mekina/index.html">Mekina</a></li>
+      <li><a href="fitopia/index.html">Fitopia</a></li>
+      <li><a href="about/index.html">About</a></li>
+      <li><a href="careers/index.html">Careers</a></li>
+      <li><a href="privacy/index.html">Privacy</a></li>
+      <li><a href="terms/index.html">Terms</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Oryxon Ltd · Birmingham, UK</div>
+  </footer>
+
+</div><!-- /main-content -->
+
+<script>
+/* ============================================================
+   CURSOR
+============================================================ */
+const cursorEl = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mx = innerWidth/2, my = innerHeight/2, cx2 = mx, cy2 = my;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function tick() {
+  cx2 += (mx - cx2) * 0.12; cy2 += (my - cy2) * 0.12;
+  cursorEl.style.left = mx+'px'; cursorEl.style.top = my+'px';
+  cursorRing.style.left = cx2+'px'; cursorRing.style.top = cy2+'px';
+  requestAnimationFrame(tick);
+})();
+document.addEventListener('mouseover', e => {
+  if (e.target.closest('a,button')) {
+    cursorEl.style.width='12px'; cursorEl.style.height='12px';
+    cursorRing.style.width='52px'; cursorRing.style.height='52px';
+    cursorRing.style.borderColor='rgba(0,194,255,0.7)';
+  }
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('a,button')) {
+    cursorEl.style.width='8px'; cursorEl.style.height='8px';
+    cursorRing.style.width='36px'; cursorRing.style.height='36px';
+    cursorRing.style.borderColor='rgba(0,194,255,0.4)';
+  }
+});
+
+/* ============================================================
+   PHASE 1: NETWORK
+============================================================ */
+const phaseNet = document.getElementById('phase-network');
+const netCanvas = document.getElementById('network-canvas');
+const nCtx = netCanvas.getContext('2d');
+let NW, NH;
+
+function resizeNet() {
+  NW = netCanvas.width = innerWidth;
+  NH = netCanvas.height = innerHeight;
+}
+resizeNet();
+window.addEventListener('resize', resizeNet);
+
+const WORDS = ['Learning','Movement','Health','Mobility','Intelligence','Design','Engineering','Innovation','Culture','Community','Language','Purpose'];
+const wordEls = [];
+WORDS.forEach((w, i) => {
+  const el = document.createElement('span');
+  el.className = 'emergent-word';
+  el.textContent = w;
+  const angle = (i / WORDS.length) * Math.PI * 2;
+  const r = 0.19 + (i%3)*0.07;
+  el.style.left = (50 + Math.cos(angle)*r*100)+'vw';
+  el.style.top  = (50 + Math.sin(angle)*r*100)+'vh';
+  el.style.transform = 'translate(-50%,-50%)';
+  phaseNet.appendChild(el);
+  wordEls.push(el);
+});
+
+const oryxonReveal = document.getElementById('oryxon-reveal');
+// center it
+oryxonReveal.style.top = '50%'; oryxonReveal.style.left = '50%';
+oryxonReveal.style.transform = 'translate(-50%,-50%)';
+
+const NODE_COUNT = 80;
+const nodes = [];
+for (let i = 0; i < NODE_COUNT; i++) {
+  nodes.push({
+    x: Math.random()*NW, y: Math.random()*NH,
+    vx: (Math.random()-0.5)*0.28, vy: (Math.random()-0.5)*0.28,
+    r: 1+Math.random()*1.4, pulse: Math.random()*Math.PI*2
+  });
+}
+
+let netT = 0, netPhase = 'draw';
+let networkDone = false, enterVisible = false;
+const oryxonLetters = document.querySelectorAll('.oryxon-letter');
+const enterBtn = document.getElementById('enter-btn');
+
+// SPEED: timings reduced ~35% from original
+const T_WORDS = 1.5, T_ORYXON = 3.6, T_ENTER = 6.0;
+
+function enterSite() {
+  if (!enterVisible || networkDone) return;
+  networkDone = true;
+  phaseNet.classList.add('exiting');
+  document.getElementById('ambient-canvas').classList.add('active');
+  document.getElementById('main-content').classList.add('active');
+  document.getElementById('nav').style.opacity = '1';
+  document.body.style.overflow = 'auto';
+  setTimeout(() => { phaseNet.style.display = 'none'; }, 1100);
+}
+enterBtn.addEventListener('click', enterSite);
+document.addEventListener('wheel', () => { if(enterVisible) enterSite(); }, {once:true});
+document.addEventListener('keydown', e => { if(e.code==='Space'||e.code==='ArrowDown') enterSite(); }, {once:true});
+document.addEventListener('touchstart', () => { if(enterVisible) enterSite(); }, {once:true});
+document.body.style.overflow = 'hidden';
+
+function drawNet(ts) {
+  nCtx.clearRect(0,0,NW,NH);
+  netT = ts * 0.001;
+  nodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if(n.x<0||n.x>NW) n.vx*=-1;
+    if(n.y<0||n.y>NH) n.vy*=-1;
+    n.pulse += 0.02;
+  });
+  const CONN = 180, MR = 260;
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y, d=Math.hypot(dx,dy);
+      if(d<CONN){
+        const a=(1-d/CONN)*0.16;
+        const md=Math.min(Math.hypot(mx-nodes[i].x, my-nodes[i].y), Math.hypot(mx-nodes[j].x, my-nodes[j].y));
+        const hov=Math.max(0,1-md/MR)*0.5;
+        nCtx.strokeStyle=`rgba(0,194,255,${a+hov})`;
+        nCtx.lineWidth=0.5+hov*0.8;
+        nCtx.beginPath(); nCtx.moveTo(nodes[i].x,nodes[i].y); nCtx.lineTo(nodes[j].x,nodes[j].y); nCtx.stroke();
+      }
+    }
+  }
+  nodes.forEach(n => {
+    const md=Math.hypot(mx-n.x,my-n.y);
+    const hov=Math.max(0,1-md/MR);
+    const gw=(Math.sin(n.pulse)+1)*0.5;
+    nCtx.fillStyle=`rgba(0,194,255,${0.3+gw*0.25+hov*0.45})`;
+    nCtx.beginPath(); nCtx.arc(n.x,n.y,n.r+hov*2,0,Math.PI*2); nCtx.fill();
+  });
+
+  if(netPhase==='draw' && netT>T_WORDS){ netPhase='words'; wordEls.forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*90)); }
+  if(netPhase==='words' && netT>T_ORYXON){ netPhase='oryxon'; revealOryxon(); }
+  if(netPhase==='oryxon' && netT>T_ENTER){ netPhase='enter'; enterBtn.classList.add('visible'); enterVisible=true; }
+  if(!networkDone) requestAnimationFrame(drawNet);
+}
+requestAnimationFrame(drawNet);
+
+function revealOryxon() {
+  wordEls.forEach(el => { el.style.transition='color 0.6s ease, opacity 0.6s ease'; el.style.opacity='0'; });
+  oryxonLetters.forEach((el,i) => {
+    setTimeout(() => {
+      el.style.opacity='1'; el.style.transform='translateY(0)';
+      el.style.color='var(--blue)';
+      setTimeout(()=>{ el.style.color='var(--text)'; },320);
+    }, i*100);
+  });
+}
+
+/* ============================================================
+   AMBIENT CANVAS
+============================================================ */
+const ambCanvas = document.getElementById('ambient-canvas');
+const aCtx = ambCanvas.getContext('2d');
+let AW, AH;
+function resizeAmb(){ AW=ambCanvas.width=innerWidth; AH=ambCanvas.height=innerHeight; }
+resizeAmb(); window.addEventListener('resize',resizeAmb);
+const particles = Array.from({length:55},()=>({
+  x:Math.random()*AW, y:Math.random()*AH,
+  vx:(Math.random()-0.5)*0.18, vy:-0.12-Math.random()*0.22,
+  r:0.5+Math.random()*1.1, pulse:Math.random()*Math.PI*2,
+  c:Math.random()>0.65?'0,232,122':'0,194,255'
+}));
+let aT=0;
+(function drawAmb(){
+  aCtx.clearRect(0,0,AW,AH); aT+=0.007;
+  particles.forEach(p=>{
+    p.x+=p.vx+Math.sin(aT+p.pulse)*0.08; p.y+=p.vy; p.pulse+=0.009;
+    if(p.y<-10){p.y=AH+10;p.x=Math.random()*AW;}
+    if(p.x<0)p.x=AW; if(p.x>AW)p.x=0;
+    const a=(Math.sin(p.pulse)+1)*0.5*0.18;
+    aCtx.fillStyle=`rgba(${p.c},${a})`;
+    aCtx.beginPath(); aCtx.arc(p.x,p.y,p.r,0,Math.PI*2); aCtx.fill();
+  });
+  requestAnimationFrame(drawAmb);
+})();
+
+/* ============================================================
+   NAV
+============================================================ */
+document.getElementById('nav').style.opacity='0';
+document.getElementById('nav').style.transition='opacity 0.8s ease, padding 0.4s, background 0.4s';
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>60);
+});
+
+/* ============================================================
+   HERO CANVAS — organic connection lines between nodes
+============================================================ */
+const heroCanvas = document.getElementById('hero-canvas');
+const hCtx = heroCanvas.getContext('2d');
+let HW, HH, hT=0;
+function resizeHero(){
+  HW=heroCanvas.width=heroCanvas.offsetWidth||innerWidth/2;
+  HH=heroCanvas.height=heroCanvas.offsetHeight||innerHeight;
+}
+setTimeout(resizeHero,50);
+window.addEventListener('resize',resizeHero);
+
+// Node positions (relative 0-1)
+const nodePositions = [{x:0.18,y:0.28},{x:0.60,y:0.52},{x:0.24,y:0.74}];
+const nodeColors = ['0,232,122','139,92,246','0,194,255'];
+
+(function drawHero(){
+  if(!HW){ requestAnimationFrame(drawHero); return; }
+  hCtx.clearRect(0,0,HW,HH); hT+=0.008;
+
+  // Connecting lines between nodes
+  for(let i=0;i<nodePositions.length;i++){
+    for(let j=i+1;j<nodePositions.length;j++){
+      const ax=nodePositions[i].x*HW, ay=nodePositions[i].y*HH;
+      const bx=nodePositions[j].x*HW, by=nodePositions[j].y*HH;
+      const pulse=(Math.sin(hT*0.5+i*0.8)+1)*0.5;
+      hCtx.strokeStyle=`rgba(255,255,255,${0.04+pulse*0.05})`;
+      hCtx.lineWidth=0.8;
+      hCtx.setLineDash([6,12]);
+      hCtx.lineDashOffset=-hT*8;
+      hCtx.beginPath(); hCtx.moveTo(ax,ay); hCtx.lineTo(bx,by); hCtx.stroke();
+      hCtx.setLineDash([]);
+    }
+  }
+
+  // Glow behind each node
+  nodePositions.forEach((n,i)=>{
+    const ox=n.x*HW, oy=n.y*HH;
+    const g=hCtx.createRadialGradient(ox,oy,0,ox,oy,80);
+    const pulse=(Math.sin(hT*0.6+i*1.2)+1)*0.5;
+    g.addColorStop(0,`rgba(${nodeColors[i]},${0.08+pulse*0.06})`);
+    g.addColorStop(1,'transparent');
+    hCtx.fillStyle=g; hCtx.fillRect(0,0,HW,HH);
+  });
+
+  // Ambient floating particles
+  hCtx.fillStyle='rgba(0,194,255,0.12)';
+  for(let i=0;i<12;i++){
+    const px=(Math.sin(hT*0.3+i*0.7)*0.3+0.5)*HW;
+    const py=((hT*0.04+i*0.08)%1)*HH;
+    hCtx.beginPath(); hCtx.arc(px,py,0.8,0,Math.PI*2); hCtx.fill();
+  }
+  requestAnimationFrame(drawHero);
+})();
+
+/* ============================================================
+   PRODUCT WORLD CANVASES
+============================================================ */
+// Mekina
+const mCanvas=document.getElementById('mekina-canvas'), mCtx=mCanvas.getContext('2d');
+let mW,mH,mT=0;
+function resizeM(){ mW=mCanvas.width=mCanvas.offsetWidth||600; mH=mCanvas.height=mCanvas.offsetHeight||innerHeight; }
+setTimeout(resizeM,50); window.addEventListener('resize',resizeM);
+(function drawM(){
+  if(!mW){requestAnimationFrame(drawM);return;}
+  mCtx.clearRect(0,0,mW,mH); mT+=0.012;
+  const cx=mW*0.5;
+  // Road
+  const rg=mCtx.createLinearGradient(cx-130,0,cx+130,0);
+  rg.addColorStop(0,'rgba(0,0,0,0)'); rg.addColorStop(0.3,'rgba(8,8,8,0.95)');
+  rg.addColorStop(0.7,'rgba(8,8,8,0.95)'); rg.addColorStop(1,'rgba(0,0,0,0)');
+  mCtx.fillStyle=rg; mCtx.fillRect(cx-130,0,260,mH);
+  // Center dashes
+  const dl=42,gp=30,tot=dl+gp,off=(mT*55)%tot;
+  mCtx.strokeStyle='rgba(0,232,122,0.65)'; mCtx.lineWidth=2.5;
+  mCtx.setLineDash([dl,gp]); mCtx.lineDashOffset=-off;
+  mCtx.beginPath(); mCtx.moveTo(cx,-tot); mCtx.lineTo(cx,mH+tot); mCtx.stroke();
+  mCtx.setLineDash([]);
+  // Lane edges
+  mCtx.strokeStyle='rgba(0,232,122,0.12)'; mCtx.lineWidth=1;
+  mCtx.beginPath(); mCtx.moveTo(cx-105,0); mCtx.lineTo(cx-105,mH); mCtx.stroke();
+  mCtx.beginPath(); mCtx.moveTo(cx+105,0); mCtx.lineTo(cx+105,mH); mCtx.stroke();
+  // Horizon glow
+  const hg=mCtx.createRadialGradient(cx,mH*0.15,0,cx,mH*0.15,280);
+  hg.addColorStop(0,'rgba(0,232,122,0.11)'); hg.addColorStop(1,'transparent');
+  mCtx.fillStyle=hg; mCtx.fillRect(0,0,mW,mH*0.5);
+  // Signs
+  [{x:cx-185,y:mH*0.22,t:'tri',l:'GIVE\nWAY'},{x:cx+165,y:mH*0.44,t:'circ',l:'30'},
+   {x:cx-170,y:mH*0.64,t:'rect',l:'STOP'},{x:cx+180,y:mH*0.78,t:'tri',l:'YIELD'}].forEach((s,i)=>{
+    const bob=Math.sin(mT*0.55+i*1.4)*5;
+    mCtx.save(); mCtx.translate(s.x,s.y+bob);
+    mCtx.globalAlpha=0.55+Math.sin(mT*0.4+i*0.8)*0.12;
+    mCtx.strokeStyle='rgba(0,232,122,0.75)'; mCtx.lineWidth=1.4;
+    if(s.t==='tri'){mCtx.beginPath();mCtx.moveTo(0,-26);mCtx.lineTo(24,17);mCtx.lineTo(-24,17);mCtx.closePath();mCtx.stroke();}
+    else if(s.t==='circ'){mCtx.beginPath();mCtx.arc(0,0,22,0,Math.PI*2);mCtx.stroke();}
+    else{mCtx.strokeRect(-22,-14,44,28);}
+    mCtx.fillStyle='rgba(0,232,122,0.7)'; mCtx.font='500 9px Inter'; mCtx.textAlign='center'; mCtx.textBaseline='middle';
+    s.l.split('\n').forEach((ln,li)=>mCtx.fillText(ln,0,li*10-(s.l.includes('\n')?5:0)));
+    mCtx.restore();
+  });
+  // Car dot
+  const cy2=((mT*50)%(mH+80))-40;
+  const cg=mCtx.createRadialGradient(cx,cy2,0,cx,cy2,20);
+  cg.addColorStop(0,'rgba(0,232,122,0.85)'); cg.addColorStop(1,'transparent');
+  mCtx.fillStyle=cg; mCtx.beginPath(); mCtx.arc(cx,cy2,20,0,Math.PI*2); mCtx.fill();
+  mCtx.fillStyle='rgba(0,232,122,1)'; mCtx.beginPath(); mCtx.arc(cx,cy2,3,0,Math.PI*2); mCtx.fill();
+  requestAnimationFrame(drawM);
+})();
+
+// Fitopia
+const fCanvas=document.getElementById('fitopia-canvas'), fCtx=fCanvas.getContext('2d');
+let fW,fH,fT=0;
+function resizeF(){ fW=fCanvas.width=fCanvas.offsetWidth||600; fH=fCanvas.height=fCanvas.offsetHeight||innerHeight; }
+setTimeout(resizeF,50); window.addEventListener('resize',resizeF);
+(function drawF(){
+  if(!fW){requestAnimationFrame(drawF);return;}
+  fCtx.clearRect(0,0,fW,fH); fT+=0.01;
+  const cx=fW*0.5,cy=fH*0.5;
+  const ag=fCtx.createRadialGradient(cx,cy,0,cx,cy,300);
+  ag.addColorStop(0,'rgba(139,92,246,0.07)'); ag.addColorStop(1,'transparent');
+  fCtx.fillStyle=ag; fCtx.fillRect(0,0,fW,fH);
+  [{r:130,p:0.82,c:'139,92,246',s:0.3},{r:100,p:0.65,c:'0,194,255',s:0.45},{r:70,p:0.91,c:'0,232,122',s:0.6}].forEach((ring,i)=>{
+    const anim=ring.p+Math.sin(fT*ring.s+i)*0.04;
+    const end=-Math.PI/2+anim*Math.PI*2;
+    fCtx.strokeStyle=`rgba(${ring.c},0.07)`; fCtx.lineWidth=10; fCtx.lineCap='round';
+    fCtx.beginPath(); fCtx.arc(cx,cy,ring.r,0,Math.PI*2); fCtx.stroke();
+    fCtx.strokeStyle=`rgba(${ring.c},0.82)`; fCtx.lineWidth=10;
+    fCtx.beginPath(); fCtx.arc(cx,cy,ring.r,-Math.PI/2,end); fCtx.stroke();
+    const ex=cx+ring.r*Math.cos(end),ey=cy+ring.r*Math.sin(end);
+    const eg=fCtx.createRadialGradient(ex,ey,0,ex,ey,18);
+    eg.addColorStop(0,`rgba(${ring.c},0.45)`); eg.addColorStop(1,'transparent');
+    fCtx.fillStyle=eg; fCtx.beginPath(); fCtx.arc(ex,ey,18,0,Math.PI*2); fCtx.fill();
+  });
+  // Heartbeat
+  const ly=cy+170,lw=220,lx=cx-lw/2;
+  fCtx.strokeStyle='rgba(139,92,246,0.55)'; fCtx.lineWidth=1.5;
+  fCtx.beginPath();
+  for(let x=0;x<=lw;x++){
+    const prog=x/lw;
+    const wave=Math.sin((prog-fT*0.5)*Math.PI*6)*12*Math.exp(-Math.pow(prog-((fT*0.5)%1),2)*30);
+    if(x===0)fCtx.moveTo(lx+x,ly+wave); else fCtx.lineTo(lx+x,ly+wave);
+  }
+  fCtx.stroke();
+  requestAnimationFrame(drawF);
+})();
+
+/* ============================================================
+   INTERSECTION OBSERVER
+============================================================ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.reveal,.reveal-world').forEach(el=>el.classList.add('visible','in'));
+      e.target.querySelectorAll('.world-tag,.world-name,.world-desc,.world-cta').forEach(el=>el.classList.add('in'));
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.world-sticky,.hero-left,.closing-inner').forEach(el=>io.observe(el));
+
+// Hero reveals on load
+setTimeout(()=>document.querySelectorAll('#hero .reveal').forEach(el=>el.classList.add('visible')),200);
+
+// Statement line lighting
+const stmtIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ e.target.classList.toggle('lit',e.isIntersecting); });
+},{threshold:0.55});
+document.querySelectorAll('.statement-line').forEach(el=>stmtIO.observe(el));
+
+// Hero nodes appear after enter
+const origEnter = enterSite;
+function activateHeroNodes(){
+  document.querySelectorAll('.hero-node').forEach((n,i)=>setTimeout(()=>n.classList.add('visible'),400+i*200));
+}
+enterBtn.addEventListener('click',activateHeroNodes);
+document.addEventListener('wheel',activateHeroNodes,{once:true});
+</script>
+</body>
+</html>

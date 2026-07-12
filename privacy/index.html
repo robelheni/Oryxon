@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Oryxon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #070707;
+  --blue: #00C2FF;
+  --green: #00E87A;
+  --purple: #8B5CF6;
+  --text: #f0f0f0;
+  --muted: rgba(240,240,240,0.35);
+  --glass: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.07);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* CURSOR */
+#cursor {
+  position: fixed; width: 8px; height: 8px;
+  background: var(--blue); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid rgba(0,194,255,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 32px 56px;
+  transition: padding 0.4s, background 0.4s;
+}
+nav.scrolled {
+  padding: 18px 56px;
+  background: rgba(7,7,7,0.8);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+}
+.nav-logo em { color: var(--blue); font-style: normal; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  font-size: 12px; font-weight: 400; letter-spacing: 0.06em;
+  color: rgba(240,240,240,0.4); text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-contact {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+  color: var(--blue); text-decoration: none; opacity: 0.75; transition: opacity 0.2s;
+}
+.nav-contact:hover { opacity: 1; }
+
+/* PAGE TRANSITIONS */
+.page-wrap {
+  opacity: 0;
+  animation: pageIn 0.7s ease forwards;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTION UTILS */
+.section-label {
+  display: block; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); margin-bottom: 20px;
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #000; background: var(--blue); text-decoration: none;
+  padding: 14px 36px; border-radius: 100px; transition: all 0.25s;
+  border: none; cursor: none;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,194,255,0.35); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+  padding: 14px 36px; border-radius: 100px;
+  border: 1px solid var(--border); transition: all 0.25s; cursor: none;
+}
+.btn-ghost:hover { border-color: rgba(0,194,255,0.4); color: var(--blue); background: rgba(0,194,255,0.05); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 44px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-logo { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.footer-logo em { color: var(--blue); font-style: normal; }
+.footer-links { display: flex; gap: 28px; list-style: none; }
+.footer-links a { font-size: 11px; color: rgba(240,240,240,0.25); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(240,240,240,0.5); }
+.footer-copy { font-size: 11px; color: rgba(240,240,240,0.2); letter-spacing: 0.05em; }
+
+/* GLASS CARD */
+.glass-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+}
+
+/* APP STORE BTN */
+.appstore-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 12px 22px;
+  text-decoration: none; color: var(--text); opacity: 0.4;
+  pointer-events: none; cursor: default;
+  transition: none;
+}
+.appstore-btn svg { flex-shrink: 0; }
+.appstore-btn-text { display: flex; flex-direction: column; gap: 1px; }
+.appstore-btn-sub { font-size: 9px; font-weight: 400; letter-spacing: 0.06em; opacity: 0.7; }
+.appstore-btn-label { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+
+@media (max-width: 900px) {
+  nav { padding: 20px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+  .nav-links { display: none; }
+  footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+<style>
+.legal-wrap{max-width:740px;margin:0 auto;padding:160px 8vw 120px;}
+.legal-title{font-family:var(--serif);font-size:clamp(40px,5vw,68px);font-weight:400;letter-spacing:-0.025em;margin-bottom:16px;}
+.legal-date{font-size:12px;color:rgba(240,240,240,0.25);letter-spacing:0.06em;margin-bottom:72px;}
+.legal-body h2{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:-0.01em;margin:48px 0 16px;}
+.legal-body p{font-size:15px;font-weight:300;line-height:1.9;color:rgba(240,240,240,0.5);margin-bottom:20px;}
+.legal-body ul{font-size:15px;font-weight:300;line-height:1.9;color:rgba(240,240,240,0.5);padding-left:24px;margin-bottom:20px;}
+.legal-body li{margin-bottom:8px;}
+.legal-body a{color:var(--blue);text-decoration:none;opacity:0.8;}
+.legal-body a:hover{opacity:1;}
+@media(max-width:900px){.legal-wrap{padding:120px 24px 80px;}}
+</style>
+</head>
+<body>
+<div id="cursor"></div><div id="cursor-ring"></div>
+<nav id="nav" class="scrolled">
+  <a href="../index.html" class="nav-logo">Oryxon<em>.</em></a>
+  <ul class="nav-links">
+    <li><a href="../products/index.html">Products</a></li><li><a href="../mekina/index.html">Mekina</a></li>
+    <li><a href="../about/index.html">About</a></li><li><a href="../careers/index.html">Careers</a></li>
+  </ul>
+  <a href="../contact/index.html" class="nav-contact">Contact</a>
+</nav>
+<div class="page-wrap">
+<div class="legal-wrap">
+  <span class="section-label">Legal</span>
+  <h1 class="legal-title">Privacy Policy</h1>
+  <div class="legal-date">Last updated: 9 July 2026</div>
+  <div class="legal-body">
+    <p>We keep this simple: we collect only what we need to run Mekina, we never sell your data, and you can delete your account at any time.</p>
+
+    <h2>1. Who we are</h2>
+    <p>Mekina is operated by Oryxon Ltd, a technology company registered in England and Wales. We build digital products that make everyday services more accessible.</p>
+    <p>Questions about this policy: <a href="mailto:oryxonltd@gmail.com">oryxonltd@gmail.com</a></p>
+
+    <h2>2. What information we collect</h2>
+    <ul>
+      <li>Email address — to create and secure your account</li>
+      <li>Name — optional, only if you choose to provide it</li>
+      <li>Password — stored as an encrypted hash, never in plain text</li>
+      <li>Practice activity — questions answered, scores, mock test results, and saved questions</li>
+      <li>Language preference — Amharic, Tigrinya, or English</li>
+      <li>Device session token — to keep you signed in securely on one device at a time</li>
+    </ul>
+    <p>If you sign in with Google, we receive your email address and name from Google. We do not receive your Google password. We do not collect your location, contacts, microphone, camera, or any other device data.</p>
+
+    <h2>3. How we use your information</h2>
+    <ul>
+      <li>To create and manage your account</li>
+      <li>To show you your practice progress, scores, and history</li>
+      <li>To send transactional emails (account verification, password reset)</li>
+      <li>To keep your account secure (one active session at a time)</li>
+      <li>To improve the app using aggregated, anonymous usage data</li>
+    </ul>
+    <p>We do not use your data for advertising, profiling, or automated decision-making.</p>
+
+    <h2>4. Who we share your data with</h2>
+    <ul>
+      <li>Railway — cloud hosting and database, EU (Ireland) region</li>
+      <li>Resend — email delivery for verification and password reset emails only</li>
+      <li>Google — only if you choose to sign in with Google</li>
+    </ul>
+    <p>We do not sell, rent, or trade your data to any third party.</p>
+
+    <h2>5. Data retention</h2>
+    <p>We keep your data for as long as your account is active. Deleting your account removes all your personal data and practice history immediately and permanently.</p>
+
+    <h2>6. Your rights (UK GDPR)</h2>
+    <ul>
+      <li>Access — request a copy of your data</li>
+      <li>Correction — update your name or email via Profile → Manage Account</li>
+      <li>Deletion — delete your account instantly via Profile → Manage Account → Delete account</li>
+      <li>Portability — request your data in a machine-readable format</li>
+      <li>Objection — object to how we process your data</li>
+    </ul>
+    <p>To exercise any right, email <a href="mailto:oryxonltd@gmail.com">oryxonltd@gmail.com</a>. We respond within 30 days.</p>
+
+    <h2>7. Security</h2>
+    <ul>
+      <li>Passwords hashed with bcrypt, never stored in plain text</li>
+      <li>All data transmitted over HTTPS</li>
+      <li>One active session per account at a time</li>
+      <li>Access tokens expire automatically</li>
+    </ul>
+
+    <h2>8. Children</h2>
+    <p>Mekina is for users aged 17 and over (minimum UK driving licence age). If you believe a child has created an account, contact us and we will delete it immediately.</p>
+
+    <h2>9. Changes to this policy</h2>
+    <p>We will notify you by email of any significant changes and update the date above.</p>
+
+    <h2>10. Contact</h2>
+    <p>Email: <a href="mailto:oryxonltd@gmail.com">oryxonltd@gmail.com</a><br>Oryxon Ltd, registered in England and Wales</p>
+  </div>
+</div>
+<footer>
+  <div class="footer-logo">Oryxon<em>.</em></div>
+  <ul class="footer-links">
+    <li><a href="../products/index.html">Products</a></li><li><a href="../about/index.html">About</a></li>
+    <li><a href="../contact/index.html">Contact</a></li>
+    <li><a href="index.html">Privacy</a></li><li><a href="../terms/index.html">Terms</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Oryxon Ltd · Birmingham, UK</div>
+</footer>
+</div>
+<script>
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=innerWidth/2,my=innerHeight/2,ccx=mx,ccy=my;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){ccx+=(mx-ccx)*.12;ccy+=(my-ccy)*.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=ccx+'px';ring.style.top=ccy+'px';requestAnimationFrame(t);})();
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+</script>
+</body>
+</html>
