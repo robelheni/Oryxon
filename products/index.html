@@ -71,6 +71,7 @@ nav.scrolled {
   color: var(--text); text-decoration: none;
 }
 .nav-logo em { color: var(--blue); font-style: normal; }
+.nav-logo img { height: 100px; display: block; }
 .nav-links { display: flex; gap: 40px; list-style: none; }
 .nav-links a {
   font-size: 12px; font-weight: 400; letter-spacing: 0.06em;
@@ -131,6 +132,7 @@ footer {
 }
 .footer-logo { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
 .footer-logo em { color: var(--blue); font-style: normal; }
+.footer-logo img { height: 80px; display: block; }
 .footer-links { display: flex; gap: 28px; list-style: none; }
 .footer-links a { font-size: 11px; color: rgba(240,240,240,0.25); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
 .footer-links a:hover { color: rgba(240,240,240,0.5); }
@@ -366,6 +368,20 @@ setTimeout(()=>document.querySelectorAll('#hero .reveal').forEach(el=>el.classLi
       el.classList.add('visible');
     });
   }, 200);
+})();
+</script>
+<script>
+(function(){
+  var btn=document.getElementById('hamburger');
+  var menu=document.getElementById('mobile-menu');
+  var closeBtn=document.getElementById('mobile-menu-close');
+  if(!btn||!menu||!closeBtn)return;
+  function openMenu(){btn.classList.add('open');menu.classList.add('open');btn.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}
+  function closeMenu(){btn.classList.remove('open');menu.classList.remove('open');btn.setAttribute('aria-expanded','false');document.body.style.overflow='';}
+  btn.addEventListener('click',function(){menu.classList.contains('open')?closeMenu():openMenu();});
+  closeBtn.addEventListener('click',closeMenu);
+  menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open'))closeMenu();});
 })();
 </script>
 

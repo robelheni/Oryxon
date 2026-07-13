@@ -38,10 +38,15 @@ body {
    NAV — Mobile-optimised (hamburger already exists)
    ══════════════════════════════════════════════ */
 
-/* Fix logo size — was inline 100px which is huge */
-.nav-logo img,
+/* Generic nav images (not the logo) */
 nav img {
   height: clamp(28px, 5vw, 36px) !important;
+  width: auto !important;
+  display: block !important;
+}
+/* Logo sizes */
+.nav-logo img {
+  height: 100px !important;
   width: auto !important;
   display: block !important;
 }
@@ -158,7 +163,7 @@ footer {
 }
 
 .footer-logo img {
-  height: clamp(16px, 3vw, 22px) !important;
+  height: 80px !important;
   width: auto !important;
   opacity: 0.6;
 }
