@@ -8,6 +8,7 @@
 <meta property="og:title" content="Mekina by Oryxon">
 <meta property="og:description" content="UK Driving Theory. In your language.">
 <meta property="og:url" content="https://oryxon.co.uk/mekina">
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -35,7 +36,7 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  cursor: none;
+  
 }
 
 /* CURSOR */
@@ -113,7 +114,7 @@ nav.scrolled {
   font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
   color: #000; background: var(--blue); text-decoration: none;
   padding: 14px 36px; border-radius: 100px; transition: all 0.25s;
-  border: none; cursor: none;
+  border: none;
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,194,255,0.35); }
 
@@ -122,7 +123,7 @@ nav.scrolled {
   font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text); text-decoration: none;
   padding: 14px 36px; border-radius: 100px;
-  border: 1px solid var(--border); transition: all 0.25s; cursor: none;
+  border: 1px solid var(--border); transition: all 0.25s
 }
 .btn-ghost:hover { border-color: rgba(0,194,255,0.4); color: var(--blue); background: rgba(0,194,255,0.05); }
 
@@ -178,7 +179,7 @@ footer {
   align-items: center;
   padding: 0 8vw;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 #mekina-hero-canvas {
   position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
@@ -192,6 +193,7 @@ footer {
   position: relative; z-index: 2;
   display: flex; justify-content: center; align-items: center;
   padding: 120px 0 80px;
+  overflow: visible;
 }
 
 /* LIVE BADGE */
@@ -250,7 +252,7 @@ footer {
 
 /* IPHONE MOCKUPS */
 .phones-wrap {
-  display: flex; align-items: flex-end; gap: -24px; position: relative;
+  display: flex; align-items: flex-end; justify-content: center; position: relative;
 }
 .phone-mock {
   position: relative; flex-shrink: 0;
@@ -281,7 +283,8 @@ footer {
 .phone-screen {
   position: absolute; inset: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 60px 20px 24px;
+  padding: 0;
+  overflow: hidden;
 }
 .screen-placeholder {
   width: 100%; height: 100%;
@@ -403,13 +406,12 @@ footer {
 </style>
 </head>
 <body>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+
 
 <canvas id="mekina-hero-canvas"></canvas>
 
 <nav id="nav" class="scrolled">
-  <a href="../index.html" class="nav-logo">Oryxon<em>.</em></a>
+  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;"></a>
   <ul class="nav-links">
     <li><a href="../products/index.html">Products</a></li>
     <li><a href="index.html" class="active">Mekina</a></li>
@@ -447,75 +449,69 @@ footer {
     </div>
   </div>
 
-  <div class="hero-right-col">
+  <div class="hero-right-col" style="overflow:visible;">
     <div class="phones-wrap">
-      <!-- Left phone: Road signs -->
-      <div class="phone-mock left">
+      <div class="phone-mock pm-outer-left">
         <div class="phone-frame">
           <div class="phone-notch"></div>
           <div class="phone-screen">
-            <div class="screen-placeholder sp-3">
-              <div class="sp-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#00C2FF" stroke-width="1.5"/><path d="M12 8v4" stroke="#00C2FF" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#00C2FF"/></svg>
-              </div>
-              <div class="mini-signs">
-                <div class="mini-sign">STOP</div>
-                <div class="mini-sign">GIVE<br>WAY</div>
-                <div class="mini-sign">30<br>mph</div>
-                <div class="mini-sign">NO<br>ENTRY</div>
-              </div>
-              <span class="sp-label">Road Signs</span>
-              <span class="sp-caption">Screenshot 3</span>
-            </div>
+            <img src="/home.png" alt="Home" style="width:100%;height:100%;object-fit:cover;object-position:top;">
           </div>
         </div>
       </div>
-
-      <!-- Main phone: Question screen -->
+      <div class="phone-mock pm-inner-left">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <img src="/practice.png" alt="Practice" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          </div>
+        </div>
+      </div>
       <div class="phone-mock main">
         <div class="phone-frame">
           <div class="phone-notch"></div>
           <div class="phone-screen">
-            <div class="screen-placeholder sp-1">
-              <div class="sp-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#00E87A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#00E87A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-              <div class="mini-question">
-                <div class="mini-q-chip">ጥያቄ 12 / 50</div>
-                <div class="mini-q-text">When driving in foggy conditions, which lights should you use?</div>
-                <div class="mini-q-opts">
-                  <div class="mini-opt">Full beam headlights</div>
-                  <div class="mini-opt selected">Dipped headlights + fog</div>
-                  <div class="mini-opt">Sidelights only</div>
-                  <div class="mini-opt">No lights needed</div>
-                </div>
-              </div>
-              <span class="sp-label">Mock Test</span>
-              <span class="sp-caption">Screenshot 1</span>
-            </div>
+            <img src="/dashboard.png" alt="Dashboard" style="width:100%;height:100%;object-fit:cover;object-position:top;">
           </div>
         </div>
       </div>
-
-      <!-- Right phone: Progress -->
-      <div class="phone-mock right">
+      <div class="phone-mock pm-inner-right">
         <div class="phone-frame">
           <div class="phone-notch"></div>
           <div class="phone-screen">
-            <div class="screen-placeholder sp-2">
-              <div class="sp-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8B5CF6" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </div>
-              <canvas id="mini-rings-canvas" width="70" height="70"></canvas>
-              <span class="sp-label">Progress</span>
-              <span class="sp-caption">Screenshot 2</span>
-            </div>
+            <img src="/progress.png" alt="Progress" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          </div>
+        </div>
+      </div>
+      <div class="phone-mock pm-outer-right">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <img src="/mock.png" alt="Mock Test" style="width:100%;height:100%;object-fit:cover;object-position:top;">
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+.pm-outer-left  { transform: translateX(80px) rotate(-7deg)   scale(0.70); z-index:1; }
+.pm-inner-left  { transform: translateX(36px) rotate(-3.5deg) scale(0.84); z-index:2; }
+.pm-inner-right { transform: translateX(-36px) rotate(3.5deg) scale(0.84); z-index:2; }
+.pm-outer-right { transform: translateX(-80px) rotate(7deg)   scale(0.70); z-index:1; }
+
+.pm-outer-left:hover  { transform: translateX(80px)  rotate(-5deg)   scale(0.80) translateY(-12px); z-index:10; }
+.pm-inner-left:hover  { transform: translateX(36px)  rotate(-2deg)   scale(0.92) translateY(-12px); z-index:10; }
+.phone-mock.main:hover { transform: translateY(-12px) scale(1.04); z-index:10; }
+.pm-inner-right:hover { transform: translateX(-36px) rotate(2deg)    scale(0.92) translateY(-12px); z-index:10; }
+.pm-outer-right:hover { transform: translateX(-80px) rotate(5deg)    scale(0.80) translateY(-12px); z-index:10; }
+
+.phones-wrap { overflow: visible; }
+.hero-right-col { overflow: visible !important; }
+#mekina-hero { overflow: visible; }
+.screens-grid { display: none; }
+</style>
 
 <!-- FEATURES -->
 <section id="features">
@@ -600,7 +596,7 @@ footer {
 </section>
 
 <footer>
-  <div class="footer-logo">Oryxon<em>.</em></div>
+  <div class="footer-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;opacity:0.6;"></div>
   <ul class="footer-links">
     <li><a href="../products/index.html">Products</a></li>
     <li><a href="../about/index.html">About</a></li>
@@ -615,13 +611,6 @@ footer {
 </div><!-- /page-wrap -->
 
 <script>
-/* Cursor */
-const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
-let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function t(){cx+=(mx-cx)*.12;cy+=(my-cy)*.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=cx+'px';ring.style.top=cy+'px';requestAnimationFrame(t);})();
-document.addEventListener('mouseover',e=>{if(e.target.closest('a,button')){cur.style.width='12px';cur.style.height='12px';ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(0,194,255,0.7)';}});
-document.addEventListener('mouseout',e=>{if(e.target.closest('a,button')){cur.style.width='8px';cur.style.height='8px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(0,194,255,0.4)';}});
 
 /* Nav */
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));

@@ -5,6 +5,7 @@
 <title>Products — Oryxon</title>
 <meta name="description" content="Oryxon products: Mekina, the UK driving theory app in Amharic and Tigrinya, and Fitopia, an AI fitness platform.">
 <meta property="og:title" content="Oryxon Products"><meta property="og:url" content="https://oryxon.co.uk/products">
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +32,7 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  cursor: none;
+  
 }
 
 /* CURSOR */
@@ -109,7 +110,7 @@ nav.scrolled {
   font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
   color: #000; background: var(--blue); text-decoration: none;
   padding: 14px 36px; border-radius: 100px; transition: all 0.25s;
-  border: none; cursor: none;
+  border: none; 
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,194,255,0.35); }
 
@@ -118,7 +119,7 @@ nav.scrolled {
   font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text); text-decoration: none;
   padding: 14px 36px; border-radius: 100px;
-  border: 1px solid var(--border); transition: all 0.25s; cursor: none;
+  border: 1px solid var(--border); transition: all 0.25s; 
 }
 .btn-ghost:hover { border-color: rgba(0,194,255,0.4); color: var(--blue); background: rgba(0,194,255,0.05); }
 
@@ -188,9 +189,9 @@ footer {
 </style>
 </head>
 <body>
-<div id="cursor"></div><div id="cursor-ring"></div>
+
 <nav id="nav" class="scrolled">
-  <a href="../index.html" class="nav-logo">Oryxon<em>.</em></a>
+  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;"></a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Products</a></li>
     <li><a href="../mekina/index.html">Mekina</a></li>
@@ -240,7 +241,7 @@ footer {
 </div>
 
 <footer>
-  <div class="footer-logo">Oryxon<em>.</em></div>
+  <div class="footer-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;opacity:0.6;"></div>
   <ul class="footer-links">
     <li><a href="../mekina/index.html">Mekina</a></li><li><a href="../fitopia/index.html">Fitopia</a></li>
     <li><a href="../about/index.html">About</a></li><li><a href="../contact/index.html">Contact</a></li>
@@ -250,12 +251,7 @@ footer {
 </footer>
 </div>
 <script>
-const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
-let mx=innerWidth/2,my=innerHeight/2,ccx=mx,ccy=my;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function t(){ccx+=(mx-ccx)*.12;ccy+=(my-ccy)*.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=ccx+'px';ring.style.top=ccy+'px';requestAnimationFrame(t);})();
-document.addEventListener('mouseover',e=>{if(e.target.closest('a,button')){cur.style.width='12px';cur.style.height='12px';ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(0,194,255,0.7)';}});
-document.addEventListener('mouseout',e=>{if(e.target.closest('a,button')){cur.style.width='8px';cur.style.height='8px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(0,194,255,0.4)';}});
+
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
 function roadCanvas(id,col){const c=document.getElementById(id),ctx=c.getContext('2d');let W,H,T=0;function r(){W=c.width=c.offsetWidth||600;H=c.height=c.offsetHeight||420;}setTimeout(r,50);window.addEventListener('resize',r);
 (function d(){if(!W){requestAnimationFrame(d);return;}ctx.clearRect(0,0,W,H);T+=0.012;const cx2=W*.5;

@@ -8,6 +8,7 @@
 <meta property="og:title" content="Oryxon">
 <meta property="og:description" content="Technology that moves people forward.">
 <meta property="og:url" content="https://oryxon.co.uk">
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -35,24 +36,6 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  cursor: none;
-}
-
-/* CURSOR */
-#cursor {
-  position: fixed; width: 8px; height: 8px;
-  background: var(--blue); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
-  mix-blend-mode: screen;
-}
-#cursor-ring {
-  position: fixed; width: 36px; height: 36px;
-  border: 1px solid rgba(0,194,255,0.4); border-radius: 50%;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s;
 }
 
 /* NAV */
@@ -113,7 +96,7 @@ nav.scrolled {
   font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
   color: #000; background: var(--blue); text-decoration: none;
   padding: 14px 36px; border-radius: 100px; transition: all 0.25s;
-  border: none; cursor: none;
+  border: none; cursor: pointer;
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,194,255,0.35); }
 
@@ -122,7 +105,7 @@ nav.scrolled {
   font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text); text-decoration: none;
   padding: 14px 36px; border-radius: 100px;
-  border: 1px solid var(--border); transition: all 0.25s; cursor: none;
+  border: 1px solid var(--border); transition: all 0.25s; cursor: pointer;
 }
 .btn-ghost:hover { border-color: rgba(0,194,255,0.4); color: var(--blue); background: rgba(0,194,255,0.05); }
 
@@ -170,72 +153,8 @@ footer {
 }
 </style>
 <style>
-/* ── PHASE 1 NETWORK ── */
-#phase-network {
-  position: fixed; inset: 0; z-index: 50;
-  background: var(--void);
-  transition: opacity 1s ease;
-}
-#phase-network.exiting { opacity: 0; pointer-events: none; }
-#network-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.emergent-word {
-  position: absolute;
-  font-family: var(--sans); font-weight: 200; font-size: 10px;
-  letter-spacing: 0.22em; text-transform: uppercase;
-  color: rgba(0,194,255,0); pointer-events: none;
-  transition: color 1.2s ease;
-  white-space: nowrap;
-}
-.emergent-word.visible { color: rgba(0,194,255,0.45); }
 
-#oryxon-reveal {
-  position: absolute; display: flex; gap: 0;
-  pointer-events: none; opacity: 1;
-  /* centered by JS */
-}
-.oryxon-letter {
-  font-family: var(--serif);
-  font-size: clamp(64px, 10vw, 130px);
-  font-weight: 400; letter-spacing: 0.01em;
-  color: var(--text); opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.65s ease, transform 0.65s ease, color 0.4s;
-}
-
-#enter-btn {
-  position: absolute; bottom: 12vh; left: 50%;
-  transform: translateX(-50%);
-  opacity: 0; transition: opacity 0.9s ease;
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
-  cursor: none; pointer-events: none;
-}
-#enter-btn.visible { opacity: 1; pointer-events: all; }
-#enter-btn .enter-label {
-  font-size: 9px; font-weight: 500; letter-spacing: 0.26em;
-  text-transform: uppercase; color: rgba(255,255,255,0.35);
-}
-.enter-line {
-  width: 1px; height: 0;
-  background: linear-gradient(to bottom, rgba(0,194,255,0.5), transparent);
-  transition: height 1s ease 0.3s;
-}
-#enter-btn.visible .enter-line { height: 48px; }
-
-/* ── AMBIENT BG CANVAS ── */
-#ambient-canvas {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  opacity: 0; transition: opacity 1.2s ease;
-}
-#ambient-canvas.active { opacity: 1; }
-
-/* ── MAIN CONTENT ── */
-#main-content {
-  position: relative; z-index: 2;
-  opacity: 0; pointer-events: none;
-  transition: opacity 1.2s ease;
-}
-#main-content.active { opacity: 1; pointer-events: all; }
 
 /* ── ASYMMETRIC HERO ── */
 #hero {
@@ -429,29 +348,265 @@ footer {
 }
 </style>
 </head>
+<style>
+/* SPLASH */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  transition: opacity 0.9s ease;
+}
+#splash.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+#splash-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.splash-logo-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.splash-logo-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.splash-logo {
+  height: 552px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+.splash-tagline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+</style>
+
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-<!-- ===== PHASE 1: NETWORK ===== -->
-<div id="phase-network">
-  <canvas id="network-canvas"></canvas>
-  <div id="oryxon-reveal">
-    <span class="oryxon-letter">O</span><span class="oryxon-letter">r</span><span class="oryxon-letter">y</span><span class="oryxon-letter">x</span><span class="oryxon-letter">o</span><span class="oryxon-letter">n</span>
-  </div>
-  <div id="enter-btn">
-    <div class="enter-line"></div>
-    <span class="enter-label">Enter</span>
+<!-- SPLASH -->
+<div id="splash">
+  <canvas id="splash-canvas"></canvas>
+  <div class="splash-logo-wrap" id="splash-logo">
+    <img src="/logo.png" alt="Oryxon" class="splash-logo">
+    <span class="splash-tagline">Ideas worth building </span>
   </div>
 </div>
 
-<!-- ===== AMBIENT ===== -->
-<canvas id="ambient-canvas"></canvas>
+<script>
+/* SPLASH STARFIELD */
+(function(){
+  const canvas = document.getElementById('splash-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Stars — varying sizes and depths
+  const STAR_COUNT = 480;
+  const stars = Array.from({ length: STAR_COUNT }, () => {
+    const depth = Math.random(); // 0 = far, 1 = close
+    return {
+      x: Math.random(),
+      y: Math.random() * 0.88, // keep above horizon
+      r: 0.2 + depth * 1.0,
+      baseOpacity: 0.08 + depth * 0.55,
+      twinkle: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.003 + Math.random() * 0.012,
+      twinkleAmp: 0.05 + depth * 0.2,
+      driftX: (Math.random() - 0.5) * 0.000015,
+      driftY: (Math.random() - 0.5) * 0.000008,
+    };
+  });
+
+  // Camera float
+  let camX = 0, camY = 0, camT = 0;
+
+  // Horizon glow pulse
+  let glowT = 0;
+
+  let running = true;
+
+  function draw() {
+    if (!running) return;
+
+    camT += 0.003;
+    glowT += 0.008;
+
+    // Very slow camera drift
+    camX = Math.sin(camT * 0.7) * 0.006;
+    camY = Math.cos(camT * 0.5) * 0.003;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // ── DEEP SPACE BACKGROUND ──
+    const spaceGrad = ctx.createLinearGradient(0, 0, 0, H);
+    spaceGrad.addColorStop(0,   '#000000');
+    spaceGrad.addColorStop(0.5, '#010103');
+    spaceGrad.addColorStop(0.8, '#010208');
+    spaceGrad.addColorStop(1,   '#02040e');
+    ctx.fillStyle = spaceGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── NEBULA / COSMIC DUST (barely visible) ──
+    const nebulaX = W * (0.62 + camX * 2);
+    const nebulaY = H * (0.28 + camY);
+    const neb1 = ctx.createRadialGradient(nebulaX, nebulaY, 0, nebulaX, nebulaY, W * 0.38);
+    neb1.addColorStop(0,   'rgba(15, 25, 55, 0.025)');
+    neb1.addColorStop(0.5, 'rgba(8, 15, 35, 0.012)');
+    neb1.addColorStop(1,   'transparent');
+    ctx.fillStyle = neb1;
+    ctx.fillRect(0, 0, W, H);
+
+    const neb2X = W * (0.22 - camX);
+    const neb2Y = H * (0.38 + camY * 0.5);
+    const neb2 = ctx.createRadialGradient(neb2X, neb2Y, 0, neb2X, neb2Y, W * 0.28);
+    neb2.addColorStop(0,   'rgba(10, 18, 40, 0.018)');
+    neb2.addColorStop(1,   'transparent');
+    ctx.fillStyle = neb2;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── STARS ──
+    stars.forEach(s => {
+      s.twinkle += s.twinkleSpeed;
+      s.x += s.driftX;
+      s.y += s.driftY;
+      if (s.x < 0) s.x = 1;
+      if (s.x > 1) s.x = 0;
+      if (s.y < 0) s.y = 0.88;
+      if (s.y > 0.88) s.y = 0;
+
+      const px = (s.x + camX) * W;
+      const py = (s.y + camY) * H;
+      const alpha = s.baseOpacity + Math.sin(s.twinkle) * s.twinkleAmp;
+
+      // Larger stars get a very subtle glow
+      if (s.r > 0.9) {
+        const glow = ctx.createRadialGradient(px, py, 0, px, py, s.r * 4);
+        glow.addColorStop(0, `rgba(200,220,255,${alpha * 0.3})`);
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(px, py, s.r * 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = `rgba(220,235,255,${Math.max(0, Math.min(1, alpha))})`;
+      ctx.beginPath();
+      ctx.arc(px, py, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── PLANET HORIZON ──
+    const horizonY = H * (0.88 + camY * 0.3);
+    const planetR = W * 2.2; // massive planet, only edge visible
+    const planetCX = W * 0.5;
+    const planetCY = horizonY + planetR;
+
+    // Planet surface — very dark
+    const planetGrad = ctx.createRadialGradient(
+      planetCX, planetCY - planetR * 0.02, planetR * 0.92,
+      planetCX, planetCY, planetR
+    );
+    planetGrad.addColorStop(0,   '#020508');
+    planetGrad.addColorStop(0.4, '#010407');
+    planetGrad.addColorStop(0.8, '#010306');
+    planetGrad.addColorStop(1,   '#000204');
+    ctx.fillStyle = planetGrad;
+    ctx.beginPath();
+    ctx.arc(planetCX, planetCY, planetR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Sunrise glow — behind planet edge
+    const sunriseX = W * (0.5 + Math.sin(glowT * 0.3) * 0.01);
+    const pulseIntensity = 0.85 + Math.sin(glowT) * 0.08;
+
+    // Core sunrise bright point
+    const sunCore = ctx.createRadialGradient(sunriseX, horizonY, 0, sunriseX, horizonY, W * 0.28);
+    sunCore.addColorStop(0,   `rgba(160,200,240,${0.3 * pulseIntensity})`);
+    sunCore.addColorStop(0.15,`rgba(100,155,210,${0.14 * pulseIntensity})`);
+    sunCore.addColorStop(0.4, `rgba(50, 95, 170,${0.06 * pulseIntensity})`);
+    sunCore.addColorStop(1,   'transparent');
+    ctx.fillStyle = sunCore;
+    ctx.fillRect(0, 0, W, H);
+
+    // Atmospheric glow along horizon
+    const atmGrad = ctx.createLinearGradient(0, horizonY - H * 0.22, 0, horizonY + H * 0.05);
+    atmGrad.addColorStop(0,   'transparent');
+    atmGrad.addColorStop(0.55,`rgba(40, 80, 150, ${0.04 * pulseIntensity})`);
+    atmGrad.addColorStop(0.8, `rgba(70,120,200,${0.10 * pulseIntensity})`);
+    atmGrad.addColorStop(1,   `rgba(120,175,240,${0.22 * pulseIntensity})`);
+    ctx.fillStyle = atmGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Wide volumetric light spreading upward
+    const volLight = ctx.createRadialGradient(sunriseX, horizonY, 0, sunriseX, horizonY, W * 0.9);
+    volLight.addColorStop(0,   `rgba(80,130,200,${0.04 * pulseIntensity})`);
+    volLight.addColorStop(0.3, `rgba(40,80,160,${0.015 * pulseIntensity})`);
+    volLight.addColorStop(1,   'transparent');
+    ctx.fillStyle = volLight;
+    ctx.fillRect(0, 0, W, H);
+
+    // Atmosphere rim on planet edge
+    ctx.save();
+    ctx.globalAlpha = 0.5 * pulseIntensity;
+    const rimGrad = ctx.createRadialGradient(planetCX, planetCY, planetR - 3, planetCX, planetCY, planetR + 14);
+    rimGrad.addColorStop(0,   'rgba(100,165,230,0.4)');
+    rimGrad.addColorStop(0.4, 'rgba(55,115,200,0.12)');
+    rimGrad.addColorStop(1,   'transparent');
+    ctx.fillStyle = rimGrad;
+    ctx.beginPath();
+    ctx.arc(planetCX, planetCY, planetR + 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // Show logo
+  setTimeout(() => {
+    document.getElementById('splash-logo').classList.add('visible');
+  }, 120);
+
+  // Fade out after 2.2s
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    splash.classList.add('fade-out');
+    running = false;
+    setTimeout(() => { splash.style.display = 'none'; }, 1000);
+  }, 2200);
+})();
+</script>
 
 <!-- ===== NAV ===== -->
 <nav id="nav">
-  <a href="index.html" class="nav-logo">Oryxon<em>.</em></a>
+  <a href="index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;"></a>
   <ul class="nav-links">
     <li><a href="products/index.html">Products</a></li>
     <li><a href="mekina/index.html">Mekina</a></li>
@@ -463,7 +618,7 @@ footer {
 </nav>
 
 <!-- ===== MAIN ===== -->
-<div id="main-content">
+<div id="main-content" style="opacity:1;pointer-events:all;">
 
   <!-- HERO: asymmetric 2-col -->
   <section id="hero">
@@ -560,7 +715,7 @@ footer {
   </section>
 
   <footer>
-    <div class="footer-logo">Oryxon<em>.</em></div>
+    <div class="footer-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;opacity:0.6;"></div>
     <ul class="footer-links">
       <li><a href="products/index.html">Products</a></li>
       <li><a href="mekina/index.html">Mekina</a></li>
@@ -577,184 +732,8 @@ footer {
 
 <script>
 /* ============================================================
-   CURSOR
-============================================================ */
-const cursorEl = document.getElementById('cursor');
-const cursorRing = document.getElementById('cursor-ring');
-let mx = innerWidth/2, my = innerHeight/2, cx2 = mx, cy2 = my;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function tick() {
-  cx2 += (mx - cx2) * 0.12; cy2 += (my - cy2) * 0.12;
-  cursorEl.style.left = mx+'px'; cursorEl.style.top = my+'px';
-  cursorRing.style.left = cx2+'px'; cursorRing.style.top = cy2+'px';
-  requestAnimationFrame(tick);
-})();
-document.addEventListener('mouseover', e => {
-  if (e.target.closest('a,button')) {
-    cursorEl.style.width='12px'; cursorEl.style.height='12px';
-    cursorRing.style.width='52px'; cursorRing.style.height='52px';
-    cursorRing.style.borderColor='rgba(0,194,255,0.7)';
-  }
-});
-document.addEventListener('mouseout', e => {
-  if (e.target.closest('a,button')) {
-    cursorEl.style.width='8px'; cursorEl.style.height='8px';
-    cursorRing.style.width='36px'; cursorRing.style.height='36px';
-    cursorRing.style.borderColor='rgba(0,194,255,0.4)';
-  }
-});
-
-/* ============================================================
-   PHASE 1: NETWORK
-============================================================ */
-const phaseNet = document.getElementById('phase-network');
-const netCanvas = document.getElementById('network-canvas');
-const nCtx = netCanvas.getContext('2d');
-let NW, NH;
-
-function resizeNet() {
-  NW = netCanvas.width = innerWidth;
-  NH = netCanvas.height = innerHeight;
-}
-resizeNet();
-window.addEventListener('resize', resizeNet);
-
-const WORDS = ['Learning','Movement','Health','Mobility','Intelligence','Design','Engineering','Innovation','Culture','Community','Language','Purpose'];
-const wordEls = [];
-WORDS.forEach((w, i) => {
-  const el = document.createElement('span');
-  el.className = 'emergent-word';
-  el.textContent = w;
-  const angle = (i / WORDS.length) * Math.PI * 2;
-  const r = 0.19 + (i%3)*0.07;
-  el.style.left = (50 + Math.cos(angle)*r*100)+'vw';
-  el.style.top  = (50 + Math.sin(angle)*r*100)+'vh';
-  el.style.transform = 'translate(-50%,-50%)';
-  phaseNet.appendChild(el);
-  wordEls.push(el);
-});
-
-const oryxonReveal = document.getElementById('oryxon-reveal');
-// center it
-oryxonReveal.style.top = '50%'; oryxonReveal.style.left = '50%';
-oryxonReveal.style.transform = 'translate(-50%,-50%)';
-
-const NODE_COUNT = 80;
-const nodes = [];
-for (let i = 0; i < NODE_COUNT; i++) {
-  nodes.push({
-    x: Math.random()*NW, y: Math.random()*NH,
-    vx: (Math.random()-0.5)*0.28, vy: (Math.random()-0.5)*0.28,
-    r: 1+Math.random()*1.4, pulse: Math.random()*Math.PI*2
-  });
-}
-
-let netT = 0, netPhase = 'draw';
-let networkDone = false, enterVisible = false;
-const oryxonLetters = document.querySelectorAll('.oryxon-letter');
-const enterBtn = document.getElementById('enter-btn');
-
-// SPEED: timings reduced ~35% from original
-const T_WORDS = 1.5, T_ORYXON = 3.6, T_ENTER = 6.0;
-
-function enterSite() {
-  if (!enterVisible || networkDone) return;
-  networkDone = true;
-  phaseNet.classList.add('exiting');
-  document.getElementById('ambient-canvas').classList.add('active');
-  document.getElementById('main-content').classList.add('active');
-  document.getElementById('nav').style.opacity = '1';
-  document.body.style.overflow = 'auto';
-  setTimeout(() => { phaseNet.style.display = 'none'; }, 1100);
-}
-enterBtn.addEventListener('click', enterSite);
-document.addEventListener('wheel', () => { if(enterVisible) enterSite(); }, {once:true});
-document.addEventListener('keydown', e => { if(e.code==='Space'||e.code==='ArrowDown') enterSite(); }, {once:true});
-document.addEventListener('touchstart', () => { if(enterVisible) enterSite(); }, {once:true});
-document.body.style.overflow = 'hidden';
-
-function drawNet(ts) {
-  nCtx.clearRect(0,0,NW,NH);
-  netT = ts * 0.001;
-  nodes.forEach(n => {
-    n.x += n.vx; n.y += n.vy;
-    if(n.x<0||n.x>NW) n.vx*=-1;
-    if(n.y<0||n.y>NH) n.vy*=-1;
-    n.pulse += 0.02;
-  });
-  const CONN = 180, MR = 260;
-  for(let i=0;i<nodes.length;i++){
-    for(let j=i+1;j<nodes.length;j++){
-      const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y, d=Math.hypot(dx,dy);
-      if(d<CONN){
-        const a=(1-d/CONN)*0.16;
-        const md=Math.min(Math.hypot(mx-nodes[i].x, my-nodes[i].y), Math.hypot(mx-nodes[j].x, my-nodes[j].y));
-        const hov=Math.max(0,1-md/MR)*0.5;
-        nCtx.strokeStyle=`rgba(0,194,255,${a+hov})`;
-        nCtx.lineWidth=0.5+hov*0.8;
-        nCtx.beginPath(); nCtx.moveTo(nodes[i].x,nodes[i].y); nCtx.lineTo(nodes[j].x,nodes[j].y); nCtx.stroke();
-      }
-    }
-  }
-  nodes.forEach(n => {
-    const md=Math.hypot(mx-n.x,my-n.y);
-    const hov=Math.max(0,1-md/MR);
-    const gw=(Math.sin(n.pulse)+1)*0.5;
-    nCtx.fillStyle=`rgba(0,194,255,${0.3+gw*0.25+hov*0.45})`;
-    nCtx.beginPath(); nCtx.arc(n.x,n.y,n.r+hov*2,0,Math.PI*2); nCtx.fill();
-  });
-
-  if(netPhase==='draw' && netT>T_WORDS){ netPhase='words'; wordEls.forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*90)); }
-  if(netPhase==='words' && netT>T_ORYXON){ netPhase='oryxon'; revealOryxon(); }
-  if(netPhase==='oryxon' && netT>T_ENTER){ netPhase='enter'; enterBtn.classList.add('visible'); enterVisible=true; }
-  if(!networkDone) requestAnimationFrame(drawNet);
-}
-requestAnimationFrame(drawNet);
-
-function revealOryxon() {
-  wordEls.forEach(el => { el.style.transition='color 0.6s ease, opacity 0.6s ease'; el.style.opacity='0'; });
-  oryxonLetters.forEach((el,i) => {
-    setTimeout(() => {
-      el.style.opacity='1'; el.style.transform='translateY(0)';
-      el.style.color='var(--blue)';
-      setTimeout(()=>{ el.style.color='var(--text)'; },320);
-    }, i*100);
-  });
-}
-
-/* ============================================================
-   AMBIENT CANVAS
-============================================================ */
-const ambCanvas = document.getElementById('ambient-canvas');
-const aCtx = ambCanvas.getContext('2d');
-let AW, AH;
-function resizeAmb(){ AW=ambCanvas.width=innerWidth; AH=ambCanvas.height=innerHeight; }
-resizeAmb(); window.addEventListener('resize',resizeAmb);
-const particles = Array.from({length:55},()=>({
-  x:Math.random()*AW, y:Math.random()*AH,
-  vx:(Math.random()-0.5)*0.18, vy:-0.12-Math.random()*0.22,
-  r:0.5+Math.random()*1.1, pulse:Math.random()*Math.PI*2,
-  c:Math.random()>0.65?'0,232,122':'0,194,255'
-}));
-let aT=0;
-(function drawAmb(){
-  aCtx.clearRect(0,0,AW,AH); aT+=0.007;
-  particles.forEach(p=>{
-    p.x+=p.vx+Math.sin(aT+p.pulse)*0.08; p.y+=p.vy; p.pulse+=0.009;
-    if(p.y<-10){p.y=AH+10;p.x=Math.random()*AW;}
-    if(p.x<0)p.x=AW; if(p.x>AW)p.x=0;
-    const a=(Math.sin(p.pulse)+1)*0.5*0.18;
-    aCtx.fillStyle=`rgba(${p.c},${a})`;
-    aCtx.beginPath(); aCtx.arc(p.x,p.y,p.r,0,Math.PI*2); aCtx.fill();
-  });
-  requestAnimationFrame(drawAmb);
-})();
-
-/* ============================================================
    NAV
 ============================================================ */
-document.getElementById('nav').style.opacity='0';
-document.getElementById('nav').style.transition='opacity 0.8s ease, padding 0.4s, background 0.4s';
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',scrollY>60);
 });
