@@ -10,4 +10,4 @@
 /products   /products/index.html   200
 
 # 404 handler
-/*     /404.html   404
+/*     /404.html   200
