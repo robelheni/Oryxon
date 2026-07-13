@@ -861,59 +861,41 @@ footer {
 }
 
 /* ══════════════════════════════════════════════
-   MEKINA — PHONE MOCKUP — MOBILE SPECIFIC
-   5 phones: outer-left, inner-left, main, inner-right, outer-right
-   On mobile, show only 3 phones (hide outer two)
+   MEKINA — PHONE MOCKUP — APP STORE CAROUSEL
+   All 5 phones in a snap-scroll row on mobile
    ══════════════════════════════════════════════ */
 
 @media (max-width: 900px) {
-  .pm-outer-left, .pm-outer-right { display: none !important; }
-  .pm-inner-left  { transform: none !important; }
-  .pm-inner-right { transform: none !important; }
   .hero-right-col {
     overflow: visible !important;
     width: 100% !important;
+    padding: 20px 0 0 !important;
   }
   .phones-wrap {
     display: flex !important;
-    overflow-x: auto !important;
-    overflow-y: visible !important;
+    overflow-x: scroll !important;
+    scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
     transform: none !important;
-    justify-content: flex-start !important;
     align-items: flex-end !important;
     gap: 16px !important;
     width: 100% !important;
-    padding: 0 24px 20px !important;
+    /* side padding = (viewport - phone) / 2 so first/last snap to center */
+    padding: 20px calc(50% - 110px) 40px !important;
     margin-bottom: 0 !important;
     scrollbar-width: none !important;
   }
   .phones-wrap::-webkit-scrollbar { display: none !important; }
-}
-
-@media (max-width: 600px) {
-  /* Show only the main phone on small screens */
-  .pm-inner-left,
-  .pm-inner-right,
-  .pm-outer-left,
-  .pm-outer-right {
-    display: none !important;
-  }
-  .phones-wrap {
-    transform: none !important;
-    margin-bottom: 0 !important;
-  }
-  .phone-mock.main {
-    /* Show single phone at comfortable size */
+  .phone-mock {
+    scroll-snap-align: center !important;
+    flex-shrink: 0 !important;
     transform: none !important;
   }
-  .phone-frame {
-    width: clamp(160px, 55vw, 220px) !important;
-    height: clamp(336px, 115vw, 460px) !important;
-  }
-  .hero-right-col {
-    padding: 24px 0 40px !important;
-    overflow: visible !important;
+  /* Show all 5 phones */
+  .pm-outer-left, .pm-outer-right,
+  .pm-inner-left, .pm-inner-right {
+    display: block !important;
+    transform: none !important;
   }
 }
 
