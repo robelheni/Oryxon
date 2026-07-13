@@ -387,7 +387,7 @@ footer {
   }
   .contact-left,
   .contact-right {
-    padding: 60px 20px !important;
+    padding: 120px 20px 60px !important;
     border-right: none !important;
   }
   .contact-left { border-bottom: 1px solid var(--border) !important; }
@@ -467,14 +467,24 @@ footer {
     padding: calc(var(--nav-h) + 40px) var(--px) 40px !important;
     min-height: auto !important;
   }
+  .hero-right-col { overflow: visible !important; }
   .phones-wrap {
-    transform: scale(0.6) !important;
-    transform-origin: center top !important;
-    margin-bottom: -110px !important;
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    transform: none !important;
+    justify-content: flex-start !important;
+    align-items: flex-end !important;
+    gap: 16px !important;
+    width: 100% !important;
+    padding: 0 24px 20px !important;
+    margin-bottom: 0 !important;
+    scrollbar-width: none !important;
   }
 
   #contact-wrap { grid-template-columns: 1fr !important; }
-  .contact-left, .contact-right { padding: 60px var(--px) !important; }
+  .contact-left, .contact-right { padding: 120px var(--px) 60px !important; }
 
   footer {
     flex-direction: column !important;
@@ -542,11 +552,20 @@ footer {
     padding: calc(var(--nav-h) + 60px) var(--px) 60px !important;
     min-height: auto !important;
   }
-  .hero-right-col { padding: 40px 0 !important; }
+  .hero-right-col { padding: 40px 0 !important; overflow: visible !important; }
   .phones-wrap {
-    transform: scale(0.68) !important;
-    transform-origin: center top !important;
-    margin-bottom: -100px !important;
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    transform: none !important;
+    justify-content: flex-start !important;
+    align-items: flex-end !important;
+    gap: 16px !important;
+    width: 100% !important;
+    padding: 0 24px 20px !important;
+    margin-bottom: 0 !important;
+    scrollbar-width: none !important;
   }
   #features, #community {
     padding: 80px var(--px) !important;
@@ -577,7 +596,7 @@ footer {
   /* Contact */
   #contact-wrap { grid-template-columns: 1fr !important; }
   .contact-left, .contact-right {
-    padding: 80px var(--px) !important;
+    padding: 120px var(--px) 80px !important;
     border-right: none !important;
   }
   .contact-left { border-bottom: 1px solid var(--border) !important; }
@@ -848,13 +867,28 @@ footer {
    ══════════════════════════════════════════════ */
 
 @media (max-width: 900px) {
-  .pm-outer-left, .pm-outer-right { display: none; }
-.pm-inner-left  { transform: translateX(16px) rotate(-3deg) scale(1); }
-.pm-inner-right { transform: translateX(-16px) rotate(3deg) scale(1); }
+  .pm-outer-left, .pm-outer-right { display: none !important; }
+  .pm-inner-left  { transform: none !important; }
+  .pm-inner-right { transform: none !important; }
   .hero-right-col {
-    overflow: hidden !important;
+    overflow: visible !important;
     width: 100% !important;
   }
+  .phones-wrap {
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    transform: none !important;
+    justify-content: flex-start !important;
+    align-items: flex-end !important;
+    gap: 16px !important;
+    width: 100% !important;
+    padding: 0 24px 20px !important;
+    margin-bottom: 0 !important;
+    scrollbar-width: none !important;
+  }
+  .phones-wrap::-webkit-scrollbar { display: none !important; }
 }
 
 @media (max-width: 600px) {
