@@ -8,3 +8,6 @@
 /careers    /careers/index.html    200
 /contact    /contact/index.html    200
 /products   /products/index.html   200
+
+# 404 handler
+/*     /404.html   404

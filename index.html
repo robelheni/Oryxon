@@ -406,11 +406,12 @@ footer {
   .nav-links { display: none !important; }
   .nav-contact { display: none; }
   nav img { height: 28px !important; }
-  .nav-logo img { height: 28px !important; }
-  .footer-logo img { height: 18px !important; }
+  .nav-logo img { height: 100px !important; }
+  .footer-logo img { height: 80px !important; }
 }
 
 </style>
+<link rel="stylesheet" href="/mobile.css">
 </head>
 <style>
 /* SPLASH */
@@ -670,7 +671,7 @@ footer {
 
 <!-- ===== NAV ===== -->
 <nav id="nav">
-  <a href="index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;"></a>
+  <a href="index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" ></a>
   <ul class="nav-links">
     <li><a href="products/index.html">Products</a></li>
     <li><a href="mekina/index.html">Mekina</a></li>
@@ -679,7 +680,20 @@ footer {
     <li><a href="careers/index.html">Careers</a></li>
   </ul>
   <a href="contact/index.html" class="nav-contact">Contact</a>
+<!-- MOBILE HAMBURGER + FULLSCREEN MENU -->
+<button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
 </nav>
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
+  <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
+  <a href="products/index.html">Products</a>
+  <a href="mekina/index.html">Mekina</a>
+  <a href="fitopia/index.html">Fitopia</a>
+  <a href="about/index.html">About</a>
+  <a href="careers/index.html">Careers</a>
+  <a href="contact/index.html" class="mobile-menu-contact">Contact →</a>
+</div>
 
 <!-- ===== MAIN ===== -->
 <div id="main-content" style="opacity:1;pointer-events:all;">
@@ -779,7 +793,7 @@ footer {
   </section>
 
   <footer>
-    <div class="footer-logo"><img src="/logo.png" alt="Oryxon" style="height:20px;display:block;opacity:0.6;"></div>
+    <div class="footer-logo"><img src="/logo.png" alt="Oryxon" ></div>
     <ul class="footer-links">
       <li><a href="products/index.html">Products</a></li>
       <li><a href="mekina/index.html">Mekina</a></li>
@@ -979,31 +993,41 @@ function activateHeroNodes(){
 enterBtn.addEventListener('click',activateHeroNodes);
 document.addEventListener('wheel',activateHeroNodes,{once:true});
 </script>
+
+
 <script>
-/* HAMBURGER */
+/* ── MOBILE WORLD SECTION FIX ── */
 (function(){
-  const btn = document.getElementById('hamburger');
-  const menu = document.getElementById('mobile-menu');
-  const close = document.getElementById('mobile-menu-close');
-  if(!btn || !menu) return;
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('open');
-    menu.classList.toggle('open');
-    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-  });
-  close.addEventListener('click', () => {
-    btn.classList.remove('open');
-    menu.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-  menu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      btn.classList.remove('open');
-      menu.classList.remove('open');
-      document.body.style.overflow = '';
+  function isMobile(){ return window.innerWidth <= 900; }
+  function fixWorldSections(){
+    document.querySelectorAll('.world-section').forEach(function(el){
+      if(isMobile()){
+        el.style.height = 'auto';
+        el.style.minHeight = 'auto';
+      } else {
+        el.style.height = '200vh';
+      }
     });
-  });
+    // Force-reveal world elements on mobile
+    if(isMobile()){
+      document.querySelectorAll('.world-tag, .world-name, .world-desc, .world-cta, .reveal-world').forEach(function(el){
+        el.classList.add('in', 'visible');
+      });
+    }
+  }
+  fixWorldSections();
+  window.addEventListener('resize', fixWorldSections);
+
+  /* ── HERO REVEAL ON MOBILE ── */
+  if(isMobile()){
+    setTimeout(function(){
+      document.querySelectorAll('.reveal').forEach(function(el){
+        el.classList.add('visible');
+      });
+    }, 300);
+  }
 })();
 </script>
+
 </body>
 </html>

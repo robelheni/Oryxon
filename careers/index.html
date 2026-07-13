@@ -252,23 +252,38 @@ footer {
   .nav-links { display: none !important; }
   .nav-contact { display: none; }
   nav img { height: 28px !important; }
-  .nav-logo img { height: 28px !important; }
-  .footer-logo img { height: 18px !important; }
+  .nav-logo img { height: 100px !important; }
+  .footer-logo img { height: 80px !important; }
 }
 
 </style>
+<link rel="stylesheet" href="/mobile.css">
 </head>
 <body>
 
 <nav id="nav" class="scrolled">
-  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" style="height:100px;display:block;"></a>
+  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" ></a>
   <ul class="nav-links">
     <li><a href="../products/index.html">Products</a></li><li><a href="../mekina/index.html">Mekina</a></li>
     <li><a href="../fitopia/index.html">Fitopia</a></li><li><a href="../about/index.html">About</a></li>
     <li><a href="index.html" class="active">Careers</a></li>
   </ul>
   <a href="../contact/index.html" class="nav-contact">Contact</a>
+<!-- MOBILE HAMBURGER + FULLSCREEN MENU -->
+<button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
 </nav>
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
+  <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
+  <a href="../index.html">Home</a>
+  <a href="../products/index.html">Products</a>
+  <a href="../mekina/index.html">Mekina</a>
+  <a href="../fitopia/index.html">Fitopia</a>
+  <a href="../about/index.html">About</a>
+  <a href="index.html">Careers</a>
+  <a href="../contact/index.html" class="mobile-menu-contact">Contact →</a>
+</div>
 <div class="page-wrap">
 <section id="hero">
   <div class="hero-inner">
@@ -304,7 +319,7 @@ footer {
 </section>
 
 <footer>
-  <div class="footer-logo"><img src="/logo.png" alt="Oryxon" style="height:80px;display:block;opacity:0.6;"></div>
+  <div class="footer-logo"><img src="/logo.png" alt="Oryxon" ></div>
   <ul class="footer-links">
     <li><a href="../products/index.html">Products</a></li><li><a href="../about/index.html">About</a></li>
     <li><a href="../contact/index.html">Contact</a></li>
@@ -320,31 +335,19 @@ const io=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.targ
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 setTimeout(()=>document.querySelectorAll('#hero .reveal').forEach(el=>el.classList.add('visible')),100);
 </script>
+
+
 <script>
-/* HAMBURGER */
+/* ── MOBILE REVEAL FALLBACK ── */
 (function(){
-  const btn = document.getElementById('hamburger');
-  const menu = document.getElementById('mobile-menu');
-  const close = document.getElementById('mobile-menu-close');
-  if(!btn || !menu) return;
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('open');
-    menu.classList.toggle('open');
-    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-  });
-  close.addEventListener('click', () => {
-    btn.classList.remove('open');
-    menu.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-  menu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      btn.classList.remove('open');
-      menu.classList.remove('open');
-      document.body.style.overflow = '';
+  if(window.innerWidth > 900) return;
+  setTimeout(function(){
+    document.querySelectorAll('.reveal').forEach(function(el){
+      el.classList.add('visible');
     });
-  });
+  }, 200);
 })();
 </script>
+
 </body>
 </html>

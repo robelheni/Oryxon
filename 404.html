@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Page Not Found · Oryxon</title>
+<meta name="description" content="This page doesn't exist.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mobile.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #070707; --blue: #00C2FF; --green: #00E87A;
+  --purple: #8B5CF6; --text: #f0f0f0;
+  --border: rgba(255,255,255,0.07);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text);
+  font-family: var(--sans); overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 56px;
+  background: rgba(7,7,7,0.88);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo img { height: 28px; display: block; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a { font-size: 12px; font-weight: 400; letter-spacing: 0.06em; color: rgba(240,240,240,0.4); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-contact { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: var(--blue); text-decoration: none; opacity: 0.75; }
+
+/* HAMBURGER */
+.hamburger { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; width: 44px; height: 44px; background: none; border: none; z-index: 200; }
+.hamburger span { display: block; width: 24px; height: 1.5px; background: var(--text); transition: all 0.3s ease; }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu { display: none; position: fixed; inset: 0; background: rgba(4,4,7,0.98); backdrop-filter: blur(32px); z-index: 150; flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 80px 40px 60px; }
+.mobile-menu.open { display: flex; }
+.mobile-menu a { font-size: clamp(22px, 6vw, 32px); font-weight: 300; color: rgba(240,240,240,0.85); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; min-height: 44px; display: flex; align-items: center; }
+.mobile-menu a:hover { color: var(--blue); }
+.mobile-menu-close { position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: rgba(240,240,240,0.4); cursor: pointer; background: none; border: none; }
+
+/* 404 CONTENT */
+.not-found {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 100px clamp(20px, 5vw, 56px) 60px;
+}
+.nf-num {
+  font-family: var(--serif);
+  font-size: clamp(80px, 22vw, 180px);
+  font-weight: 400; line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(240,240,240,0.06);
+  margin-bottom: 24px;
+}
+.nf-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 6vw, 52px);
+  font-weight: 400; letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: 16px;
+}
+.nf-title em { font-style: italic; color: var(--blue); }
+.nf-sub {
+  font-size: clamp(14px, 3.5vw, 15px); font-weight: 300;
+  line-height: 1.8; color: rgba(240,240,240,0.4);
+  max-width: 380px; margin: 0 auto 40px;
+}
+.nf-actions {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #000; background: var(--blue); text-decoration: none;
+  padding: 14px 32px; border-radius: 100px; transition: all 0.25s;
+  min-height: 44px;
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+  padding: 14px 32px; border-radius: 100px;
+  border: 1px solid var(--border); transition: all 0.25s;
+  min-height: 44px;
+}
+.btn-ghost:hover { border-color: rgba(0,194,255,0.4); color: var(--blue); }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; }
+.footer-logo img { height: 18px; display: block; opacity: 0.6; }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a { font-size: 11px; color: rgba(240,240,240,0.25); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+.footer-copy { font-size: 11px; color: rgba(240,240,240,0.2); letter-spacing: 0.05em; }
+
+@media (max-width: 900px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none !important; }
+  .nav-contact { display: none; }
+  .hamburger { display: flex; }
+  .nf-actions { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-ghost { width: min(100%, 280px); justify-content: center; }
+  footer { flex-direction: column; gap: 24px; text-align: center; padding: 36px 20px; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 12px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="/" class="nav-logo"><img src="/logo.png" alt="Oryxon"></a>
+  <ul class="nav-links">
+    <li><a href="/products/">Products</a></li>
+    <li><a href="/mekina/">Mekina</a></li>
+    <li><a href="/fitopia/">Fitopia</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
+  </ul>
+  <a href="/contact/" class="nav-contact">Contact</a>
+  <button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
+  <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
+  <a href="/products/">Products</a>
+  <a href="/mekina/">Mekina</a>
+  <a href="/fitopia/">Fitopia</a>
+  <a href="/about/">About</a>
+  <a href="/careers/">Careers</a>
+  <a href="/contact/" class="mobile-menu-contact">Contact →</a>
+</div>
+
+<div class="not-found">
+  <div class="nf-num">404</div>
+  <h1 class="nf-title">This page <em>doesn't exist.</em></h1>
+  <p class="nf-sub">The page you're looking for has either moved or never existed. Let's get you back on track.</p>
+  <div class="nf-actions">
+    <a href="/" class="btn-primary">Back to home</a>
+    <a href="/products/" class="btn-ghost">See our products</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="/logo.png" alt="Oryxon"></div>
+  <ul class="footer-links">
+    <li><a href="/products/">Products</a></li>
+    <li><a href="/mekina/">Mekina</a></li>
+    <li><a href="/fitopia/">Fitopia</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="/terms/">Terms</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Oryxon Ltd · Birmingham, UK</div>
+</footer>
+
+<script>
+(function(){
+  var btn = document.getElementById('hamburger');
+  var menu = document.getElementById('mobile-menu');
+  var closeBtn = document.getElementById('mobile-menu-close');
+  if(!btn || !menu) return;
+  function openMenu(){ btn.classList.add('open'); menu.classList.add('open'); btn.setAttribute('aria-expanded','true'); document.body.style.overflow = 'hidden'; }
+  function closeMenu(){ btn.classList.remove('open'); menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); document.body.style.overflow = ''; }
+  btn.addEventListener('click', function(){ menu.classList.contains('open') ? closeMenu() : openMenu(); });
+  if(closeBtn) closeBtn.addEventListener('click', closeMenu);
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && menu.classList.contains('open')) closeMenu(); });
+})();
+</script>
+</body>
+</html>
