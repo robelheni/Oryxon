@@ -36,25 +36,11 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  
+  cursor: none;
 }
 
-/* CURSOR */
-#cursor {
-  position: fixed; width: 8px; height: 8px;
-  background: var(--blue); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
-  mix-blend-mode: screen;
-}
-#cursor-ring {
-  position: fixed; width: 36px; height: 36px;
-  border: 1px solid rgba(0,194,255,0.4); border-radius: 50%;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s;
-}
+/* CURSOR — particle trail (canvas) */
+#cursor, #cursor-ring { display: none; }
 
 /* NAV */
 nav {
@@ -503,16 +489,19 @@ footer {
 
 <canvas id="mekina-hero-canvas"></canvas>
 
-<nav id="nav" class="scrolled">
-  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" ></a>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav id="site-nav" class="scrolled">
+  <a href="/" class="nav-logo"><img src="/logo.png" alt="Oryxon" ></a>
   <ul class="nav-links">
-    <li><a href="../products/index.html">Products</a></li>
+    <li><a href="/products/">Products</a></li>
     <li><a href="index.html" class="active">Mekina</a></li>
-    <li><a href="../fitopia/index.html">Fitopia</a></li>
-    <li><a href="../about/index.html">About</a></li>
-    <li><a href="../careers/index.html">Careers</a></li>
+    <li><a href="/fitopia/">Fitopia</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
   </ul>
-  <a href="../contact/index.html" class="nav-contact">Contact</a>
+  <a href="/contact/" class="nav-contact">Contact</a>
 <!-- MOBILE HAMBURGER + FULLSCREEN MENU -->
 <button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
   <span></span><span></span><span></span>
@@ -520,13 +509,13 @@ footer {
 </nav>
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
   <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
-  <a href="../index.html">Home</a>
-  <a href="../products/index.html">Products</a>
+  <a href="/">Home</a>
+  <a href="/products/">Products</a>
   <a href="index.html">Mekina</a>
-  <a href="../fitopia/index.html">Fitopia</a>
-  <a href="../about/index.html">About</a>
-  <a href="../careers/index.html">Careers</a>
-  <a href="../contact/index.html" class="mobile-menu-contact">Contact →</a>
+  <a href="/fitopia/">Fitopia</a>
+  <a href="/about/">About</a>
+  <a href="/careers/">Careers</a>
+  <a href="/contact/" class="mobile-menu-contact">Contact →</a>
 </div>
 
 <div class="page-wrap">
@@ -705,14 +694,14 @@ footer {
 <footer>
   <div class="footer-logo"><img src="/logo.png" alt="Oryxon" ></div>
   <ul class="footer-links">
-    <li><a href="../products/index.html">Products</a></li>
-    <li><a href="../about/index.html">About</a></li>
-    <li><a href="../careers/index.html">Careers</a></li>
-    <li><a href="../contact/index.html">Contact</a></li>
-    <li><a href="../privacy/index.html">Privacy</a></li>
-    <li><a href="../terms/index.html">Terms</a></li>
+    <li><a href="/products/">Products</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="/terms/">Terms</a></li>
   </ul>
-  <div class="footer-copy">© 2026 Oryxon Ltd</div>
+  <div class="footer-copy">© 2025 Oryxon Ltd</div>
 </footer>
 
 </div><!-- /page-wrap -->
@@ -720,7 +709,15 @@ footer {
 <script>
 
 /* Nav */
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+(function(){
+  const nav=document.getElementById('site-nav');
+  if(!nav) return;
+  const s=document.createElement('div');
+  s.style.cssText='position:absolute;top:80px;height:1px;width:1px;pointer-events:none;';
+  document.body.prepend(s);
+  new IntersectionObserver(([e])=>{nav.classList.toggle('scrolled',!e.isIntersecting);}).observe(s);
+  nav.classList.add('scrolled');
+})();
 
 /* Hero canvas — road */
 const hc=document.getElementById('mekina-hero-canvas'),hCtx=hc.getContext('2d');
@@ -787,6 +784,9 @@ setTimeout(()=>document.querySelectorAll('#mekina-hero .reveal').forEach(el=>el.
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open'))closeMenu();});
 })();
 </script>
-
+<script>
+(function(){document.querySelectorAll('a[href]').forEach(link=>{const href=link.getAttribute('href');if(!href||href.startsWith('#')||href.startsWith('mailto:')||href.startsWith('http')||link.target==='_blank')return;link.addEventListener('click',e=>{e.preventDefault();const w=document.querySelector('.page-wrap');if(w){w.style.transition='opacity 0.28s ease,transform 0.28s ease';w.style.opacity='0';w.style.transform='translateY(-6px)';}setTimeout(()=>window.location.href=href,280);});});})();
+(function(){const cv=document.createElement('canvas');cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;';document.body.appendChild(cv);const ctx=cv.getContext('2d');let W,H;function r(){W=cv.width=innerWidth;H=cv.height=innerHeight;}r();window.addEventListener('resize',r);let mx=-999,my=-999,ls=0;const pts=[];document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;const n=performance.now();if(n-ls>18){pts.push({x:mx,y:my,t:n});ls=n;}});document.addEventListener('mouseleave',()=>{mx=-999;});(function d(){requestAnimationFrame(d);ctx.clearRect(0,0,W,H);const n=performance.now(),L=420;for(let i=pts.length-1;i>=0;i--){const p=pts[i],age=n-p.t;if(age>L){pts.splice(i,1);continue;}const t=age/L,a=(1-t)*0.75,s=3.5*(1-t*0.85);ctx.beginPath();ctx.arc(p.x,p.y,s,0,Math.PI*2);ctx.fillStyle=`rgba(0,194,255,${a})`;ctx.fill();}if(mx>0){ctx.beginPath();ctx.arc(mx,my,3,0,Math.PI*2);ctx.fillStyle='rgba(0,194,255,0.95)';ctx.fill();}})();})();
+</script>
 </body>
 </html>

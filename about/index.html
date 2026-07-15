@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About — Oryxon</title>
-<meta name="description" content="Oryxon is a digital product company based in Birmingham, UK. We build technology for communities that have been overlooked.">
+<meta name="description" content="Oryxon is a technology company based in the UK. We build software products that serve specific, underserved needs.">
 <meta property="og:title" content="About Oryxon"><meta property="og:url" content="https://oryxon.co.uk/about">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,25 +32,11 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  
+  cursor: none;
 }
 
-/* CURSOR */
-#cursor {
-  position: fixed; width: 8px; height: 8px;
-  background: var(--blue); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
-  mix-blend-mode: screen;
-}
-#cursor-ring {
-  position: fixed; width: 36px; height: 36px;
-  border: 1px solid rgba(0,194,255,0.4); border-radius: 50%;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s;
-}
+/* CURSOR — particle trail (canvas) */
+#cursor, #cursor-ring { display: none; }
 
 /* NAV */
 nav {
@@ -274,30 +260,28 @@ footer {
 </head>
 <body>
 
-<nav id="nav" class="scrolled">
-  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" ></a>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav id="site-nav" class="scrolled">
+  <a href="/" class="nav-logo"><img src="/logo.png" alt="Oryxon"></a>
   <ul class="nav-links">
-    <li><a href="../products/index.html">Products</a></li>
-    <li><a href="../mekina/index.html">Mekina</a></li>
-    <li><a href="../fitopia/index.html">Fitopia</a></li>
-    <li><a href="index.html" class="active">About</a></li>
-    <li><a href="../careers/index.html">Careers</a></li>
+    <li><a href="/products/">Work</a></li>
+    <li><a href="/about/" class="active">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
   </ul>
-  <a href="../contact/index.html" class="nav-contact">Contact</a>
-<!-- MOBILE HAMBURGER + FULLSCREEN MENU -->
-<button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
-  <span></span><span></span><span></span>
-</button>
+  <a href="/contact/" class="nav-contact">Contact</a>
+  <button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
   <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
-  <a href="../index.html">Home</a>
-  <a href="../products/index.html">Products</a>
-  <a href="../mekina/index.html">Mekina</a>
-  <a href="../fitopia/index.html">Fitopia</a>
-  <a href="index.html">About</a>
-  <a href="../careers/index.html">Careers</a>
-  <a href="../contact/index.html" class="mobile-menu-contact">Contact →</a>
+  <a href="/">Home</a>
+  <a href="/products/">Work</a>
+  <a href="/about/">About</a>
+  <a href="/careers/">Careers</a>
+  <a href="/contact/" class="mobile-menu-contact">Contact</a>
 </div>
 <div class="page-wrap">
 
@@ -307,49 +291,34 @@ footer {
     <h1 class="reveal">About<br>Oryxon.</h1>
   </div>
   <div class="hero-right">
-    <p class="reveal">We are a digital product company based in Birmingham, UK. We build technology with precision and genuine care for the people who will use it. Everything we make is built to perform and built to last.</p>
+    <p class="reveal">A technology company based in the UK. We build software products that serve specific, underserved needs. Small team. Long-term focus.</p>
   </div>
 </section>
 
 <section id="origin">
   <div class="origin-left reveal">
-    <span class="section-label">How we think</span>
-    <h2 class="origin-title">How we build<br>and why it matters.</h2>
-    <p class="origin-sub">These are the standards we hold every product to. Not because someone told us to — because anything less is not worth shipping.</p>
+    <span class="section-label">Our work</span>
+    <h2 class="origin-title">Two products.<br>Two real problems.</h2>
   </div>
   <div class="origin-right">
     <div class="origin-block reveal">
-      <div class="ob-num">01</div>
-      <div class="ob-title">We think before we build.</div>
-      <p class="ob-text">Every product we ship has been thought through properly. We take the time to understand the problem deeply before writing a single line of code.</p>
+      <div class="ob-title">Mekina</div>
+      <p class="ob-text">Hundreds of thousands of people in the UK speak Amharic or Tigrinya as their first language. The DVSA theory test is only available in English. Mekina gives them the same access everyone else has — fully licensed, fully translated, built properly.</p>
     </div>
     <div class="origin-block reveal">
-      <div class="ob-num">02</div>
-      <div class="ob-title">Precision is the standard.</div>
-      <p class="ob-text">The details matter. The quality of what we build shows in every interaction, every screen, and every decision. That standard does not drop when things get difficult.</p>
-    </div>
-    <div class="origin-block reveal">
-      <div class="ob-num">03</div>
-      <div class="ob-title">We build for the long term.</div>
-      <p class="ob-text">We are not chasing trends or optimising for noise. We build things that are still excellent and still relevant years from now. That takes patience and it takes discipline.</p>
-    </div>
-    <div class="origin-block reveal">
-      <div class="ob-num">04</div>
-      <div class="ob-title">Products that genuinely help.</div>
-      <p class="ob-text">We are here to help people get results. Every product we build should make something meaningfully easier, better, or more effective for the person using it.</p>
+      <div class="ob-title">Fitopia</div>
+      <p class="ob-text">AI fitness tools exist, but most are either too generic or too expensive. Fitopia is a personal AI trainer that adapts to you — your schedule, your goals, your level. Currently in development.</p>
     </div>
   </div>
 </section>
 
 <section id="founding">
   <div class="founding-inner">
-    <span class="section-label reveal">Our story</span>
-    <h2 class="founding-title reveal">Building products people keep.</h2>
+    <span class="section-label reveal">The company</span>
+    <h2 class="founding-title reveal">Small team.<br>Specific problems.</h2>
     <div class="founding-body reveal">
-      <p>ORYXON creates software that solves real problems with thoughtful design, dependable engineering, and a relentless focus on quality.</p>
-      <p>We don't build products to chase trends or attract attention. We build products that earn a place in people's everyday lives.</p>
-      <p>From mobility and education to health and productivity, every product is designed to be simple, reliable, and built to last.</p>
-      <p>We are just getting started.</p>
+      <p>Oryxon is a small, focused software company. We pick problems that matter — gaps nobody else has filled, or filled well — and we build products to fill them.</p>
+      <p>We don't have a portfolio of fifty features. We have two products, built carefully, and a clear sense of what we're doing next.</p>
     </div>
   </div>
 </section>
@@ -374,10 +343,10 @@ footer {
 <section id="closing">
   <div class="closing-inner">
     <span class="section-label reveal">Work with us</span>
-    <h2 class="closing-title reveal">Have something<br>in <em>mind?</em></h2>
-    <p class="closing-sub reveal">We are always open to hearing from people who care about what they build. If you want to work with us or just want to say hello, we would love to hear from you.</p>
+    <h2 class="closing-title reveal">Have something<br>worth <em>building?</em></h2>
+    <p class="closing-sub reveal">We're always open to hearing from people who have a real problem and want to solve it properly. Say hello.</p>
     <div class="reveal">
-      <a href="../contact/index.html" class="btn-ghost">Get in touch</a>
+      <a href="/contact/" class="btn-ghost">Get in touch</a>
     </div>
   </div>
 </section>
@@ -385,16 +354,18 @@ footer {
 <footer>
   <div class="footer-logo"><img src="/logo.png" alt="Oryxon" ></div>
   <ul class="footer-links">
-    <li><a href="../products/index.html">Products</a></li><li><a href="../mekina/index.html">Mekina</a></li>
-    <li><a href="../careers/index.html">Careers</a></li><li><a href="../contact/index.html">Contact</a></li>
-    <li><a href="../privacy/index.html">Privacy</a></li><li><a href="../terms/index.html">Terms</a></li>
+    <li><a href="/products/">Work</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
   </ul>
-  <div class="footer-copy">© 2026 Oryxon Ltd</div>
+  <div class="footer-copy">© 2025 Oryxon Ltd</div>
 </footer>
 </div>
 <script>
 
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+(function(){const nav=document.getElementById('site-nav');if(!nav)return;const s=document.createElement('div');s.style.cssText='position:absolute;top:80px;height:1px;width:1px;pointer-events:none;';document.body.prepend(s);new IntersectionObserver(([e])=>{nav.classList.toggle('scrolled',!e.isIntersecting);}).observe(s);nav.classList.add('scrolled');})();
 const io=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 setTimeout(()=>document.querySelectorAll('#hero .reveal').forEach(el=>el.classList.add('visible')),100);
@@ -426,6 +397,9 @@ setTimeout(()=>document.querySelectorAll('#hero .reveal').forEach(el=>el.classLi
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open'))closeMenu();});
 })();
 </script>
-
+<script>
+(function(){document.querySelectorAll('a[href]').forEach(link=>{const href=link.getAttribute('href');if(!href||href.startsWith('#')||href.startsWith('mailto:')||href.startsWith('http')||link.target==='_blank')return;link.addEventListener('click',e=>{e.preventDefault();const w=document.querySelector('.page-wrap');if(w){w.style.transition='opacity 0.28s ease,transform 0.28s ease';w.style.opacity='0';w.style.transform='translateY(-6px)';}setTimeout(()=>window.location.href=href,280);});});})();
+(function(){const cv=document.createElement('canvas');cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;';document.body.appendChild(cv);const ctx=cv.getContext('2d');let W,H;function r(){W=cv.width=innerWidth;H=cv.height=innerHeight;}r();window.addEventListener('resize',r);let mx=-999,my=-999,ls=0;const pts=[];document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;const n=performance.now();if(n-ls>18){pts.push({x:mx,y:my,t:n});ls=n;}});document.addEventListener('mouseleave',()=>{mx=-999;});(function d(){requestAnimationFrame(d);ctx.clearRect(0,0,W,H);const n=performance.now(),L=420;for(let i=pts.length-1;i>=0;i--){const p=pts[i],age=n-p.t;if(age>L){pts.splice(i,1);continue;}const t=age/L,a=(1-t)*0.75,s=3.5*(1-t*0.85);ctx.beginPath();ctx.arc(p.x,p.y,s,0,Math.PI*2);ctx.fillStyle=`rgba(0,194,255,${a})`;ctx.fill();}if(mx>0){ctx.beginPath();ctx.arc(mx,my,3,0,Math.PI*2);ctx.fillStyle='rgba(0,194,255,0.95)';ctx.fill();}})();})();
+</script>
 </body>
 </html>

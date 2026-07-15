@@ -44,11 +44,17 @@ nav img {
   width: auto !important;
   display: block !important;
 }
-/* Logo sizes */
+/* Logo sizes — desktop default kept; mobile override below */
 .nav-logo img {
   height: 100px !important;
   width: auto !important;
   display: block !important;
+}
+
+/* Shrink logos on all mobile viewports */
+@media (max-width: 900px) {
+  .nav-logo img  { height: 36px !important; }
+  .footer-logo img { height: 40px !important; }
 }
 
 nav {
@@ -225,6 +231,8 @@ footer {
     min-height: auto !important;
     gap: 0 !important;
   }
+  /* hero-content inner padding no longer needed: section handles nav clearance */
+  .hero-content { padding: 0 !important; }
   .hero-left { padding: 0 !important; }
   .hero-right { display: none !important; }
   .hero-title {
@@ -683,6 +691,19 @@ footer {
 }
 
 /* ══════════════════════════════════════════════
+   MEKINA / FITOPIA — Remove excess col padding
+   The hero section already handles top spacing;
+   hero-left-col padding creates a double-gap on
+   small screens where min-height is overridden.
+   ══════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .hero-left-col {
+    padding-top: 0 !important;
+    padding-bottom: 24px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════
    FITOPIA — PHONE MOCKUP
    ══════════════════════════════════════════════ */
 @media (max-width: 900px) {
@@ -696,6 +717,16 @@ footer {
     transform: scale(0.55);
     transform-origin: center top;
     margin-bottom: -100px;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   CONTACT — Right section doesn't need nav clearance
+   since it sits below contact-left when stacked
+   ══════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .contact-right {
+    padding-top: 56px !important;
   }
 }
 
