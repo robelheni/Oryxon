@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared.css">
 <link rel="stylesheet" href="/mobile.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 /* ── SPLASH ── */
 #splash {
@@ -34,17 +35,23 @@
   min-height: 100svh;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   overflow: hidden;
+  padding-top: 100px;
 }
 #hero-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
 }
+#hero-3d {
+  position: relative; z-index: 2;
+  flex: 1;
+  min-height: 280px;
+}
+#hero-3d canvas { display: block; width: 100% !important; height: 100% !important; }
 .hero-content {
   position: relative; z-index: 2;
-  padding: 0 8vw;
-  padding-top: 160px;
+  padding: 0 8vw 80px;
   max-width: 960px;
 }
 .hero-title {
@@ -151,8 +158,9 @@
 
 /* ── MOBILE ── */
 @media (max-width: 900px) {
-  #hero { align-items: flex-end; padding-bottom: 56px; }
-  .hero-content { padding: 0 24px; padding-top: 100px; }
+  #hero { padding-top: 80px; }
+  #hero-3d { min-height: 200px; }
+  .hero-content { padding: 0 24px 56px; }
   .hero-title { font-size: clamp(40px, 11vw, 64px); margin-bottom: 22px; }
   .hero-sub { font-size: 13px; margin-bottom: 36px; }
   .hero-actions { flex-direction: column; gap: 12px; }
@@ -200,8 +208,9 @@
 <div class="page-wrap">
 
   <!-- Hero -->
-  <section id="hero">
+  <section id="hero" class="home-hero">
     <canvas id="hero-canvas"></canvas>
+    <div id="hero-3d"></div>
     <div class="hero-content">
       <h1 class="hero-title">The difference<br>is always in the <em>details.</em></h1>
       <p class="hero-sub">Oryxon &nbsp;·&nbsp; Technology company</p>
@@ -657,6 +666,155 @@
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
+})();
+
+/* ─────────────────────────────────────────
+   HERO 3D — precision geometric core
+───────────────────────────────────────── */
+(function() {
+  'use strict';
+  if (typeof THREE === 'undefined') return;
+  const container = document.getElementById('hero-3d');
+  if (!container) return;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer.setClearColor(0x000000, 0);
+  container.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.z = 5.5;
+
+  const root = new THREE.Group();
+  scene.add(root);
+
+  const CYAN   = 0x00C2FF;
+  const PURPLE = 0x8B5CF6;
+
+  // outer icosahedron — slow, wide, translucent
+  const edgesOuter = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.45, 1));
+  const matOuter = new THREE.LineBasicMaterial({
+    color: CYAN, transparent: true, opacity: 0.22,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const wireOuter = new THREE.LineSegments(edgesOuter, matOuter);
+  root.add(wireOuter);
+
+  // inner icosahedron — two-pass glow (sharp + soft rim)
+  const edgesInner = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.0, 1));
+  const matInner = new THREE.LineBasicMaterial({
+    color: CYAN, transparent: true, opacity: 0.75,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const matInnerGlow = new THREE.LineBasicMaterial({
+    color: CYAN, transparent: true, opacity: 0.18,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const wireInner     = new THREE.LineSegments(edgesInner.clone(), matInner);
+  const wireInnerGlow = new THREE.LineSegments(edgesInner.clone(), matInnerGlow);
+  wireInnerGlow.scale.setScalar(1.018);
+  root.add(wireInner);
+  root.add(wireInnerGlow);
+
+  // octahedron — inner counter-form, purple
+  const matOct = new THREE.LineBasicMaterial({
+    color: PURPLE, transparent: true, opacity: 0.45,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const wireOct = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.OctahedronGeometry(0.62, 0)), matOct
+  );
+  root.add(wireOct);
+
+  // atmosphere sphere (very faint cyan halo)
+  root.add(new THREE.Mesh(
+    new THREE.SphereGeometry(1.9, 16, 16),
+    new THREE.MeshBasicMaterial({
+      color: CYAN, transparent: true, opacity: 0.028,
+      side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+  ));
+
+  // particles — scattered constellation
+  const COUNT = 260;
+  const pPos = new Float32Array(COUNT * 3);
+  const pCol = new Float32Array(COUNT * 3);
+  const cCyan  = new THREE.Color(CYAN);
+  const cWhite = new THREE.Color(0xffffff);
+  for (let i = 0; i < COUNT; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi   = Math.acos(2 * Math.random() - 1);
+    const r     = 0.3 + Math.pow(Math.random(), 0.7) * 1.6;
+    pPos[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+    pPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    pPos[i*3+2] = r * Math.cos(phi);
+    const c = cCyan.clone().lerp(cWhite, Math.random() * 0.35);
+    pCol[i*3] = c.r; pCol[i*3+1] = c.g; pCol[i*3+2] = c.b;
+  }
+  const ptGeo = new THREE.BufferGeometry();
+  ptGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  ptGeo.setAttribute('color',    new THREE.BufferAttribute(pCol, 3));
+  const ptMat = new THREE.PointsMaterial({
+    size: 0.028, vertexColors: true, transparent: true, opacity: 0.72,
+    sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  root.add(new THREE.Points(ptGeo, ptMat));
+
+  // mouse / touch parallax
+  let mx = 0, my = 0, tx = 0, ty = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX / window.innerWidth  - 0.5;
+    my = e.clientY / window.innerHeight - 0.5;
+  });
+  document.addEventListener('touchmove', e => {
+    mx = e.touches[0].clientX / window.innerWidth  - 0.5;
+    my = e.touches[0].clientY / window.innerHeight - 0.5;
+  }, { passive: true });
+
+  function resize() {
+    const W = container.clientWidth, H = container.clientHeight;
+    if (!W || !H) return;
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+    renderer.setSize(W, H, false);
+    camera.position.z = H > W ? 6.5 : 5.5;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  (function tick() {
+    requestAnimationFrame(tick);
+    t += 0.01;
+    if (!reducedMotion) {
+      wireOuter.rotation.y += 0.004;
+      wireOuter.rotation.x += 0.0012;
+      wireInner.rotation.y      -= 0.006;
+      wireInner.rotation.z      += 0.002;
+      wireInnerGlow.rotation.copy(wireInner.rotation);
+      wireOct.rotation.x += 0.009;
+      wireOct.rotation.z -= 0.005;
+      // smooth parallax
+      tx += (mx * 0.38 - tx) * 0.045;
+      ty += (my * 0.38 - ty) * 0.045;
+      root.rotation.y = tx;
+      root.rotation.x = -ty;
+      // breathing pulse
+      const b = 1 + Math.sin(t * 0.38) * 0.022;
+      wireInner.scale.setScalar(b);
+      wireInnerGlow.scale.setScalar(b * 1.018);
+      // subtle opacity flicker
+      matOuter.opacity     = 0.18 + Math.sin(t * 0.55) * 0.06;
+      matInner.opacity     = 0.70 + Math.sin(t * 0.82 + 1.1) * 0.08;
+      matInnerGlow.opacity = 0.15 + Math.sin(t * 0.82 + 1.1) * 0.04;
+      matOct.opacity       = 0.38 + Math.sin(t * 1.1  + 2.3) * 0.09;
+      ptMat.opacity        = 0.65 + Math.sin(t * 0.46) * 0.1;
+    }
+    renderer.render(scene, camera);
+  })();
 })();
 
 /* ─────────────────────────────────────────

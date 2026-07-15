@@ -225,14 +225,14 @@ footer {
   .nav-contact { display: none !important; }
 
   /* ── HOME HERO ── */
-  #hero {
-    grid-template-columns: 1fr !important;
-    padding: calc(var(--nav-h) + 120px) 20px 60px !important;
-    min-height: auto !important;
+  #hero.home-hero {
+    padding: 100px 0 0 !important;
+    min-height: 100svh !important;
+    min-height: 100vh !important;
     gap: 0 !important;
   }
-  /* hero-content inner padding no longer needed: section handles nav clearance */
-  .hero-content { padding: 0 !important; }
+  #hero.home-hero .hero-content { padding: 0 20px 56px !important; }
+  #hero-3d { min-height: 42vh !important; }
   .hero-left { padding: 0 !important; }
   .hero-right { display: none !important; }
   .hero-title {
@@ -430,11 +430,12 @@ footer {
   .nav-links { display: none !important; }
   .nav-contact { display: none !important; }
 
-  #hero {
-    grid-template-columns: 1fr !important;
-    padding: calc(var(--nav-h) + 110px) var(--px) 60px !important;
-    min-height: auto !important;
+  #hero.home-hero {
+    padding: 100px 0 0 !important;
+    min-height: 100svh !important;
+    gap: 0 !important;
   }
+  #hero.home-hero .hero-content { padding: 0 var(--px) 60px !important; }
   .hero-left { padding: 0 !important; }
   .hero-right { display: none !important; }
   .hero-title { font-size: clamp(22px, 5.5vw, 28px) !important; line-height: 1.2 !important; }
@@ -523,11 +524,12 @@ footer {
   .nav-links { display: none !important; }
   .nav-contact { display: none !important; }
 
-  #hero {
-    grid-template-columns: 1fr !important;
-    padding: calc(var(--nav-h) + 110px) var(--px) 72px !important;
-    min-height: auto !important;
+  #hero.home-hero {
+    padding: 100px 0 0 !important;
+    min-height: 100svh !important;
+    gap: 0 !important;
   }
+  #hero.home-hero .hero-content { padding: 0 var(--px) 72px !important; }
   .hero-left { padding: 0 !important; }
   .hero-right { display: none !important; }
   .hero-title { font-size: clamp(24px, 4vw, 32px) !important; line-height: 1.2 !important; }
