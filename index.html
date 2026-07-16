@@ -32,8 +32,8 @@
 /* ── HERO ── */
 #hero {
   position: relative;
-  min-height: 100svh;
-  min-height: 100vh;
+  height: 100svh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -46,9 +46,9 @@
 #hero-3d {
   position: relative; z-index: 2;
   flex: 1;
-  min-height: 320px;
+  min-height: 0;
 }
-#hero-3d canvas { display: block; width: 100% !important; height: 100% !important; }
+#hero-3d canvas { position: absolute; inset: 0; display: block; width: 100% !important; height: 100% !important; }
 .hero-content {
   position: relative; z-index: 2;
   padding: 0 8vw 80px;
@@ -780,7 +780,8 @@
   }, { passive: true });
 
   function resize() {
-    const W = container.clientWidth, H = container.clientHeight;
+    const W = container.clientWidth  || window.innerWidth;
+    const H = container.clientHeight || (window.innerHeight - 155);
     if (!W || !H) return;
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
@@ -789,7 +790,6 @@
     renderer.domElement.style.height = '100%';
     camera.position.z = H > W ? 6.5 : 5.5;
   }
-  // defer initial resize until browser has computed flex layout
   requestAnimationFrame(resize);
   window.addEventListener('resize', resize);
 
