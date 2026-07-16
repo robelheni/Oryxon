@@ -41,6 +41,51 @@
   position: absolute; inset: 0;
   z-index: 1;
 }
+/* CSS fallback orb — shown when WebGL is unavailable */
+.orb-fallback {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(340px, 52vw); height: min(340px, 52vw);
+  pointer-events: none;
+}
+.orb-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(0,194,255,0.55);
+  animation: orbSpin 7s linear infinite;
+}
+.orb-ring:nth-child(2) {
+  transform: rotateX(60deg);
+  border-color: rgba(0,194,255,0.35);
+  animation-duration: 9s;
+  animation-direction: reverse;
+}
+.orb-ring:nth-child(3) {
+  transform: rotateY(60deg);
+  border-color: rgba(0,194,255,0.25);
+  animation-duration: 11s;
+}
+.orb-ring:nth-child(4) {
+  inset: 18%;
+  border-color: rgba(139,92,246,0.6);
+  animation-duration: 5s;
+  animation-direction: reverse;
+}
+.orb-ring:nth-child(5) {
+  inset: 35%;
+  border-color: rgba(139,92,246,0.45);
+  animation-duration: 4s;
+}
+.orb-glow {
+  position: absolute; inset: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,194,255,0.06) 0%, transparent 70%);
+}
+@keyframes orbSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 /* canvas styled inline by renderer init */
 /* text — anchored bottom-left */
 .hero-content {
@@ -547,12 +592,21 @@
 (function() {
   'use strict';
 
-  if (typeof THREE === 'undefined') { console.error('three.min.js not loaded'); return; }
+  function cssOrb() {
+    const c = document.getElementById('hero-3d');
+    if (!c) return;
+    c.innerHTML = '<div class="orb-fallback"><div class="orb-glow"></div><div class="orb-ring"></div><div class="orb-ring"></div><div class="orb-ring"></div><div class="orb-ring"></div><div class="orb-ring"></div></div>';
+  }
+
+  if (typeof THREE === 'undefined') { cssOrb(); return; }
 
   const container = document.getElementById('hero-3d');
-  if (!container) { console.error('hero-3d missing'); return; }
+  if (!container) return;
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  } catch(e) { cssOrb(); return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
 
