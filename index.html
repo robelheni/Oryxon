@@ -542,7 +542,6 @@
 
 /* ─────────────────────────────────────────
    HERO 3D — 2D canvas perspective renderer
-   No WebGL required. Works everywhere.
 ───────────────────────────────────────── */
 (function() {
   'use strict';
@@ -556,46 +555,64 @@
   const ctx = cv.getContext('2d');
 
   let W, H, cx, cy;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = cv.width  = window.innerWidth  * dpr;
-    H = cv.height = window.innerHeight * dpr;
+    W = cv.width  = window.innerWidth  * DPR;
+    H = cv.height = window.innerHeight * DPR;
     cx = W / 2; cy = H / 2;
   }
   resize();
   window.addEventListener('resize', resize);
 
   /* ── 3D math ── */
-  function rotX(v, a) { const c=Math.cos(a),s=Math.sin(a); return [v[0], v[1]*c-v[2]*s, v[1]*s+v[2]*c]; }
-  function rotY(v, a) { const c=Math.cos(a),s=Math.sin(a); return [v[0]*c+v[2]*s, v[1], -v[0]*s+v[2]*c]; }
-  function rotZ(v, a) { const c=Math.cos(a),s=Math.sin(a); return [v[0]*c-v[1]*s, v[0]*s+v[1]*c, v[2]]; }
+  function rx(v,a){const c=Math.cos(a),s=Math.sin(a);return[v[0],v[1]*c-v[2]*s,v[1]*s+v[2]*c];}
+  function ry(v,a){const c=Math.cos(a),s=Math.sin(a);return[v[0]*c+v[2]*s,v[1],-v[0]*s+v[2]*c];}
+  function rz(v,a){const c=Math.cos(a),s=Math.sin(a);return[v[0]*c-v[1]*s,v[0]*s+v[1]*c,v[2]];}
 
   const CAM = 5;
-  function proj(v, focal) {
+  function proj(v, f) {
     const d = v[2] + CAM;
-    return [cx + v[0] * focal / d, cy + v[1] * focal / d];
+    return [cx + v[0]*f/d, cy + v[1]*f/d];
   }
 
-  function transform(verts, ax, ay, az, scale, offY, offZ) {
+  function xform(verts, ax, ay, az, scale, oy, oz) {
     return verts.map(v => {
-      let p = [v[0]*scale, v[1]*scale, v[2]*scale];
-      p = rotX(p, ax); p = rotY(p, ay); p = rotZ(p, az);
-      return [p[0], p[1]+offY, p[2]+offZ];
+      let p = rx([v[0]*scale, v[1]*scale, v[2]*scale], ax);
+      p = ry(p, ay); p = rz(p, az);
+      return [p[0], p[1]+oy, p[2]+oz];
     });
   }
 
-  function drawEdges(verts, edges, focal, color, alpha, lineW) {
-    ctx.strokeStyle = color;
-    ctx.globalAlpha = alpha;
-    ctx.lineWidth   = lineW;
-    ctx.beginPath();
-    for (let i = 0; i < edges.length; i++) {
-      const a = proj(verts[edges[i][0]], focal);
-      const b = proj(verts[edges[i][1]], focal);
-      ctx.moveTo(a[0], a[1]);
-      ctx.lineTo(b[0], b[1]);
-    }
-    ctx.stroke();
+  /* draw each edge individually with depth-based opacity + glow */
+  function drawGeo(verts, edges, focal, r, g, b, maxAlpha) {
+    const sorted = edges.map(([a,b]) => ({
+      a, b, z: (verts[a][2]+verts[b][2]) / 2
+    })).sort((x,y) => x.z - y.z);
+
+    const zMin = sorted[0].z, zRange = (sorted[sorted.length-1].z - zMin) || 1;
+
+    sorted.forEach(({a, b, z}) => {
+      const depth = (z - zMin) / zRange;      // 0=back, 1=front
+      const coreA = maxAlpha * (0.15 + depth * 0.85);
+      const glowA = maxAlpha * (0.06 + depth * 0.10);
+      const [x1,y1] = proj(verts[a], focal);
+      const [x2,y2] = proj(verts[b], focal);
+
+      /* glow pass */
+      ctx.strokeStyle = `rgba(${r},${g},${b},${glowA})`;
+      ctx.lineWidth = 7 * DPR;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+
+      /* mid glow */
+      ctx.strokeStyle = `rgba(${r},${g},${b},${glowA * 1.4})`;
+      ctx.lineWidth = 3 * DPR;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+
+      /* sharp core */
+      ctx.strokeStyle = `rgba(${r},${g},${b},${coreA})`;
+      ctx.lineWidth = 1 * DPR;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    });
   }
 
   /* ── Geometry ── */
@@ -605,63 +622,50 @@
     [0,-1,phi],[0,1,phi],[0,-1,-phi],[0,1,-phi],
     [phi,0,-1],[phi,0,1],[-phi,0,-1],[-phi,0,1]
   ];
-  const icoV = icoRaw.map(v => { const l=Math.sqrt(v[0]**2+v[1]**2+v[2]**2); return [v[0]/l,v[1]/l,v[2]/l]; });
+  const icoV = icoRaw.map(v => {const l=Math.sqrt(v[0]**2+v[1]**2+v[2]**2);return[v[0]/l,v[1]/l,v[2]/l];});
   const icoE = [
     [0,1],[0,5],[0,7],[0,10],[0,11],[1,5],[1,7],[1,8],[1,9],
     [2,3],[2,4],[2,6],[2,10],[2,11],[3,4],[3,6],[3,8],[3,9],
     [4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[6,10],[7,8],[7,10],[8,9],[10,11]
   ];
-
   const octV = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
   const octE = [[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]];
 
   /* ── State ── */
-  let aX=0, aY=0, aX2=0, aY2=0, aZ2=0, aXo=0, aZo=0;
-  let mx=0, my=0, tx=0, ty=0, t=0;
+  let aX=0,aY=0,aX2=0,aY2=0,aZ2=0,aXo=0,aZo=0;
+  let mx=0,my=0,tx=0,ty=0,t=0;
   const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.addEventListener('mousemove', e=>{mx=e.clientX/window.innerWidth-0.5;my=e.clientY/window.innerHeight-0.5;});
+  document.addEventListener('touchmove', e=>{mx=e.touches[0].clientX/window.innerWidth-0.5;my=e.touches[0].clientY/window.innerHeight-0.5;},{passive:true});
 
-  document.addEventListener('mousemove', e => { mx=e.clientX/window.innerWidth-0.5; my=e.clientY/window.innerHeight-0.5; });
-  document.addEventListener('touchmove', e => { mx=e.touches[0].clientX/window.innerWidth-0.5; my=e.touches[0].clientY/window.innerHeight-0.5; }, {passive:true});
-
-  /* ── Render loop ── */
   (function tick(ts) {
     requestAnimationFrame(tick);
-    if (!W || !H) return;
-
-    t = (ts || 0) * 0.001;
+    if (!W||!H) return;
+    t = (ts||0)*0.001;
 
     if (!rm) {
-      aX  += 0.0012; aY  += 0.004;
-      aX2 += 0.002;  aY2 -= 0.006; aZ2 += 0.001;
-      aXo += 0.009;  aZo -= 0.005;
-      tx += (mx * 0.38 - tx) * 0.045;
-      ty += (my * 0.38 - ty) * 0.045;
+      aX+=0.0012; aY+=0.004;
+      aX2+=0.002; aY2-=0.006; aZ2+=0.001;
+      aXo+=0.009; aZo-=0.005;
+      tx+=(mx*0.38-tx)*0.045;
+      ty+=(my*0.38-ty)*0.045;
     }
 
-    const floatY = Math.sin(t * 0.28) * 0.13;
-    const floatZ = Math.sin(t * 0.19) * 0.16;
-    const focal  = Math.min(W, H) * 0.9;
-    const S      = 1.4, Si = 0.88, So = 0.56;
+    const fy = Math.sin(t*0.28)*0.13;
+    const fz = Math.sin(t*0.19)*0.16;
+    const f  = Math.min(W,H)*0.92;
 
-    const outer = transform(icoV, aX+ty, aY+tx, 0,    S,  floatY*S,  floatZ*S);
-    const inner = transform(icoV, aX2+ty, aY2+tx, aZ2, Si, floatY*Si, floatZ*Si);
-    const oct   = transform(octV, aXo+ty, 0+tx,  aZo, So, floatY*So, floatZ*So);
+    const outer = xform(icoV, aX+ty, aY+tx, 0,    1.40, fy*1.40, fz*1.40);
+    const inner = xform(icoV, aX2+ty,aY2+tx,aZ2,  0.88, fy*0.88, fz*0.88);
+    const oct   = xform(octV, aXo+ty,0+tx,  aZo,  0.56, fy*0.56, fz*0.56);
 
-    ctx.clearRect(0, 0, W, H);
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.clearRect(0,0,W,H);
 
-    /* outer — two passes (edge + soft glow) */
-    drawEdges(outer, icoE, focal, '#00C2FF', 0.28 + Math.sin(t*0.55)*0.07, 1.0);
-    drawEdges(outer, icoE, focal, '#00C2FF', 0.10 + Math.sin(t*0.55)*0.03, 3.5);
+    /* draw back-to-front, per-edge depth glow */
+    drawGeo(outer, icoE, f,  0, 194, 255, 0.38 + Math.sin(t*0.55)*0.06);
+    drawGeo(inner, icoE, f,  0, 194, 255, 0.90 + Math.sin(t*0.82+1.1)*0.07);
+    drawGeo(oct,   octE, f, 139, 92, 246, 0.60 + Math.sin(t*1.1+2.3)*0.09);
 
-    /* inner — sharp bright core */
-    drawEdges(inner, icoE, focal, '#00C2FF', 0.75 + Math.sin(t*0.82+1.1)*0.08, 1.0);
-    drawEdges(inner, icoE, focal, '#00C2FF', 0.18 + Math.sin(t*0.82+1.1)*0.04, 4.0);
-
-    /* octahedron — purple */
-    drawEdges(oct, octE, focal, '#8B5CF6', 0.50 + Math.sin(t*1.1+2.3)*0.09, 1.0);
-
-    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   })();
 })();
