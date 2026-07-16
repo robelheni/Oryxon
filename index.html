@@ -677,6 +677,7 @@
 ───────────────────────────────────────── */
 (function() {
   'use strict';
+  try {
   if (typeof THREE === 'undefined') return;
   const container = document.getElementById('hero-3d');
   if (!container) return;
@@ -784,9 +785,12 @@
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
     renderer.setSize(W, H, false);
+    renderer.domElement.style.width  = '100%';
+    renderer.domElement.style.height = '100%';
     camera.position.z = H > W ? 6.5 : 5.5;
   }
-  resize();
+  // defer initial resize until browser has computed flex layout
+  requestAnimationFrame(resize);
   window.addEventListener('resize', resize);
 
   let t = 0;
@@ -819,6 +823,7 @@
     }
     renderer.render(scene, camera);
   })();
+  } catch(e) { console.warn('Hero 3D init failed:', e); }
 })();
 
 /* ─────────────────────────────────────────
@@ -856,7 +861,7 @@
           .forEach(el=>el.classList.add('visible'));
       }
     });
-  },{threshold:0.2});
+  },{threshold:0, rootMargin:'-10% 0px -10% 0px'});
   document.querySelectorAll('.world-sticky').forEach(el=>obs.observe(el));
 })();
 
