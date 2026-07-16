@@ -36,16 +36,10 @@
   height: 100vh;
   overflow: hidden;
 }
-/* stars — background layer */
-#hero-canvas {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  z-index: 1;
-}
-/* 3D object — foreground, floats over stars */
+/* 3D object fills hero */
 #hero-3d {
   position: absolute; inset: 0;
-  z-index: 2;
+  z-index: 1;
 }
 /* canvas styled inline by renderer init */
 /* text — anchored bottom-left */
@@ -207,7 +201,6 @@
 
   <!-- Hero -->
   <section id="hero" class="home-hero">
-    <canvas id="hero-canvas"></canvas>
     <div id="hero-3d"></div>
     <div class="hero-content">
       <h1 class="hero-title">The difference<br>is always in the <em>details.</em></h1>
@@ -355,124 +348,6 @@
   requestAnimationFrame(frame);
 })();
 
-/* ─────────────────────────────────────────
-   HERO CANVAS — cursor-reactive network
-───────────────────────────────────────── */
-(function() {
-  const canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W = 0, H = 0;
-  let mx = -999, my = -999;
-
-  function resize() {
-    W = canvas.width = canvas.offsetWidth || window.innerWidth;
-    H = canvas.height = canvas.offsetHeight || window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const N = 90;
-  const CONNECT = 168;
-  const COLS = ['255,255,255', '0,194,255', '0,232,122'];
-  const CWEIGHTS = [0.83, 0.11, 0.06];
-
-  function pickCol() {
-    const r = Math.random();
-    return r < CWEIGHTS[0] ? COLS[0] : r < CWEIGHTS[0]+CWEIGHTS[1] ? COLS[1] : COLS[2];
-  }
-
-  const nodes = Array.from({length: N}, () => ({
-    x: Math.random(), y: Math.random(),
-    vx: (Math.random()-0.5)*0.00024, vy: (Math.random()-0.5)*0.00024,
-    r: 1.1 + Math.random()*2.4,
-    col: pickCol(),
-    br: 0.07 + Math.random()*0.33,
-    p: Math.random()*Math.PI*2,
-    ps: 0.007 + Math.random()*0.018,
-  }));
-
-  const pkts = [];
-  let lastPkt = 0;
-
-  function spawnPkt(t) {
-    for (let a = 0; a < 30; a++) {
-      const i = (Math.random()*N)|0, j = (Math.random()*N)|0;
-      if (i===j) continue;
-      const dx=(nodes[i].x-nodes[j].x)*W, dy=(nodes[i].y-nodes[j].y)*H;
-      if (Math.sqrt(dx*dx+dy*dy) < CONNECT) {
-        pkts.push({i, j, dur:900+Math.random()*1300, st:t, col:nodes[i].col});
-        return;
-      }
-    }
-  }
-
-  function draw(t) {
-    if (!W||!H) { requestAnimationFrame(draw); return; }
-    ctx.clearRect(0, 0, W, H);
-
-    if (t - lastPkt > 1400) { spawnPkt(t); lastPkt = t; }
-
-    // Update nodes
-    nodes.forEach(n => {
-      n.p += n.ps;
-      const nx=n.x*W, ny=n.y*H;
-      const dx=nx-mx, dy=ny-my;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if (d<148&&d>0) { const f=(1-d/148)*0.0018; n.vx+=(dx/d)*f; n.vy+=(dy/d)*f; }
-      n.vx*=0.984; n.vy*=0.984;
-      n.x+=n.vx; n.y+=n.vy;
-      if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>1){n.x=1;n.vx*=-1;}
-      if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>1){n.y=1;n.vy*=-1;}
-    });
-
-    // Connections
-    for (let i=0;i<N;i++) for (let j=i+1;j<N;j++) {
-      const ax=nodes[i].x*W, ay=nodes[i].y*H;
-      const bx=nodes[j].x*W, by=nodes[j].y*H;
-      const d=Math.sqrt((ax-bx)**2+(ay-by)**2);
-      if (d<CONNECT) {
-        ctx.strokeStyle=`rgba(255,255,255,${(1-d/CONNECT)*0.075})`;
-        ctx.lineWidth=0.55;
-        ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke();
-      }
-    }
-
-    // Nodes
-    nodes.forEach(n => {
-      const nx=n.x*W, ny=n.y*H;
-      const al=n.br+Math.sin(n.p)*0.1;
-      if (n.r>2.4) {
-        const g=ctx.createRadialGradient(nx,ny,0,nx,ny,n.r*5.5);
-        g.addColorStop(0,`rgba(${n.col},${al*0.27})`); g.addColorStop(1,'transparent');
-        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(nx,ny,n.r*5.5,0,Math.PI*2); ctx.fill();
-      }
-      ctx.fillStyle=`rgba(${n.col},${Math.min(0.9,al+0.18)})`;
-      ctx.beginPath(); ctx.arc(nx,ny,n.r,0,Math.PI*2); ctx.fill();
-    });
-
-    // Packets
-    for (let i=pkts.length-1;i>=0;i--) {
-      const pk=pkts[i];
-      const pt=(t-pk.st)/pk.dur;
-      if (pt>=1) { pkts.splice(i,1); continue; }
-      const a=nodes[pk.i], b=nodes[pk.j];
-      const px=(a.x+(b.x-a.x)*pt)*W, py=(a.y+(b.y-a.y)*pt)*H;
-      const g=ctx.createRadialGradient(px,py,0,px,py,8);
-      g.addColorStop(0,`rgba(${pk.col},0.92)`);
-      g.addColorStop(0.45,`rgba(${pk.col},0.22)`);
-      g.addColorStop(1,'transparent');
-      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(px,py,8,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle=`rgba(${pk.col},1)`; ctx.beginPath(); ctx.arc(px,py,2.2,0,Math.PI*2); ctx.fill();
-    }
-
-    requestAnimationFrame(draw);
-  }
-
-  document.addEventListener('mousemove', e=>{mx=e.clientX; my=e.clientY;});
-  document.addEventListener('mouseleave', ()=>{mx=-999; my=-999;});
-  requestAnimationFrame(draw);
-})();
 
 /* ─────────────────────────────────────────
    MEKINA CANVAS — route network
