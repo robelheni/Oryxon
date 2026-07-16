@@ -233,7 +233,7 @@ footer {
     gap: 0 !important;
   }
   #hero.home-hero .hero-content { padding: 0 20px 56px !important; }
-  #hero-3d { min-height: 42vh !important; }
+  #hero-3d { height: 42vh !important; min-height: 180px !important; }
   .hero-left { padding: 0 !important; }
   .hero-right { display: none !important; }
   .hero-title {
@@ -659,10 +659,10 @@ footer {
   nav.scrolled { padding: 16px var(--px); }
   .nav-links { gap: 28px !important; }
 
-  #hero {
+  #hero:not(.home-hero) {
     padding: 0 var(--px) !important;
   }
-  .hero-title { font-size: clamp(44px, 5vw, 68px) !important; }
+  .hero-title { font-size: clamp(22px, 2.4vw, 32px) !important; }
 
   .world-left { padding: 0 0 0 var(--px) !important; }
 

@@ -21,8 +21,11 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  cursor: auto;
+  cursor: none;
 }
+
+/* CURSOR — particle trail (canvas-drawn) */
+#cursor, #cursor-ring { display: none; }
 
 /* NAV */
 nav {
@@ -44,7 +47,7 @@ nav.scrolled {
 }
 .nav-logo img { height: 100px; display: block; }
 .nav-logo em { color: var(--blue); font-style: normal; }
-.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links { display: flex; gap: 40px; list-style: none; margin-left: auto; margin-right: 32px; }
 .nav-links a {
   font-size: 12px; font-weight: 400; letter-spacing: 0.06em;
   color: rgba(240,240,240,0.4); text-decoration: none; transition: color 0.2s;
