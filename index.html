@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared.css">
 <link rel="stylesheet" href="/mobile.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <style>
 /* ── SPLASH ── */
 #splash {
@@ -671,10 +671,18 @@
 ───────────────────────────────────────── */
 (function() {
   'use strict';
-  try {
-  if (typeof THREE === 'undefined') return;
+  if (typeof THREE === 'undefined') { console.error('Three.js failed to load'); return; }
   const container = document.getElementById('hero-3d');
-  if (!container) return;
+  if (!container) { console.error('hero-3d container not found'); return; }
+
+  // WebGL check
+  try {
+    const testCanvas = document.createElement('canvas');
+    const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
+    if (!gl) { console.error('WebGL not supported'); return; }
+  } catch(e) { console.error('WebGL check failed', e); return; }
+
+  try {
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -817,7 +825,7 @@
     }
     renderer.render(scene, camera);
   })();
-  } catch(e) { console.warn('Hero 3D init failed:', e); }
+  } catch(e) { console.error('Hero 3D init failed:', e); }
 })();
 
 /* ─────────────────────────────────────────
