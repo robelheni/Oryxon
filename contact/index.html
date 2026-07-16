@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — Oryxon</title>
-<meta name="description" content="Get in touch with Oryxon. oryxon.co.uk">
+<meta name="description" content="Get in touch with Oryxon. oryxonltd@gmail.com">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -31,9 +31,11 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  
+  cursor: none;
 }
 
+/* CURSOR — particle trail (canvas) */
+#cursor, #cursor-ring { display: none; }
 
 /* NAV */
 nav {
@@ -55,7 +57,7 @@ nav.scrolled {
 }
 .nav-logo em { color: var(--blue); font-style: normal; }
 .nav-logo img { height: 100px; display: block; }
-.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links { display: flex; gap: 40px; list-style: none; margin-left: auto; margin-right: 32px; }
 .nav-links a {
   font-size: 12px; font-weight: 400; letter-spacing: 0.06em;
   color: rgba(240,240,240,0.4); text-decoration: none; transition: color 0.2s;
@@ -244,37 +246,38 @@ footer {
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
-<nav id="nav" class="scrolled">
-  <a href="../index.html" class="nav-logo"><img src="/logo.png" alt="Oryxon" ></a>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav id="site-nav" class="scrolled">
+  <a href="/" class="nav-logo"><img src="/logo.png" alt="Oryxon"></a>
   <ul class="nav-links">
-    <li><a href="../products/index.html">Products</a></li><li><a href="../mekina/index.html">Mekina</a></li>
-    <li><a href="../fitopia/index.html">Fitopia</a></li><li><a href="../about/index.html">About</a></li>
-    <li><a href="../careers/index.html">Careers</a></li>
+    <li><a href="/products/">Work</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
   </ul>
-  <a href="index.html" class="nav-contact" style="opacity:1;">Contact</a>
-<!-- MOBILE HAMBURGER + FULLSCREEN MENU -->
-<button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
-  <span></span><span></span><span></span>
-</button>
+  <a href="/contact/" class="nav-contact" style="opacity:1;">Contact</a>
+  <button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
   <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
-  <a href="../index.html">Home</a>
-  <a href="../products/index.html">Products</a>
-  <a href="../mekina/index.html">Mekina</a>
-  <a href="../fitopia/index.html">Fitopia</a>
-  <a href="../about/index.html">About</a>
-  <a href="../careers/index.html">Careers</a>
-  <a href="index.html">Contact</a>
+  <a href="/">Home</a>
+  <a href="/products/">Work</a>
+  <a href="/about/">About</a>
+  <a href="/careers/">Careers</a>
+  <a href="/contact/" class="mobile-menu-contact">Contact</a>
 </div>
 <div class="page-wrap">
 <div id="contact-wrap">
   <div class="contact-left">
-    <span class="section-label reveal">Get in touch</span>
-    <p class="contact-sub reveal">We read every message. Whether you want to work with us, collaborate, provide feedback on Mekina, or just tell us who you are — we want to hear from you.</p>
+    <h1 class="contact-title reveal">Get<br>in touch.</h1>
+    <p class="contact-sub reveal">We read every message. Whether you want to work with us, ask about Mekina, or just say hello — we want to hear from you.</p>
     <a href="mailto:oryxonltd@gmail.com" class="contact-email reveal">
       <span class="contact-divider"></span>
-      oryxon.co.uk
+      oryxonltd@gmail.com
     </a>
   </div>
   <div class="contact-right">
@@ -289,15 +292,15 @@ footer {
       </div>
       <div class="contact-item reveal">
         <div class="ci-label">Fitopia waitlist</div>
-        <div class="ci-val"><a href="https://fitopiaa.netlify.app/">Join the waitlist →</a></div>
+        <div class="ci-val"><a href="https://fitopiaa.netlify.app/" target="_blank" rel="noopener">Join the waitlist →</a></div>
       </div>
       <div class="contact-item reveal">
         <div class="ci-label">Press and media</div>
         <div class="ci-val"><a href="mailto:oryxonltd@gmail.com?subject=Press%20Enquiry">oryxonltd@gmail.com</a></div>
       </div>
       <div class="contact-item reveal">
-        <div class="ci-label">Registered address</div>
-        <div class="ci-val">Oryxon Ltd</div>
+        <div class="ci-label">Registered office</div>
+        <div class="ci-val">Oryxon Ltd, United Kingdom</div>
       </div>
     </div>
   </div>
@@ -305,16 +308,18 @@ footer {
 <footer>
   <div class="footer-logo"><img src="/logo.png" alt="Oryxon" ></div>
   <ul class="footer-links">
-    <li><a href="../products/index.html">Products</a></li><li><a href="../about/index.html">About</a></li>
-    <li><a href="../careers/index.html">Careers</a></li>
-    <li><a href="../privacy/index.html">Privacy</a></li><li><a href="../terms/index.html">Terms</a></li>
+    <li><a href="/products/">Work</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/careers/">Careers</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
   </ul>
-  <div class="footer-copy">© 2026 Oryxon Ltd</div>
+  <div class="footer-copy">© 2025 Oryxon Ltd</div>
 </footer>
 </div>
 <script>
 
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+(function(){const nav=document.getElementById('site-nav');if(!nav)return;const s=document.createElement('div');s.style.cssText='position:absolute;top:80px;height:1px;width:1px;pointer-events:none;';document.body.prepend(s);new IntersectionObserver(([e])=>{nav.classList.toggle('scrolled',!e.isIntersecting);}).observe(s);nav.classList.add('scrolled');})();
 const bg=document.getElementById('canvas-bg'),bCtx=bg.getContext('2d');
 let BW,BH;function rB(){BW=bg.width=innerWidth;BH=bg.height=innerHeight;}rB();window.addEventListener('resize',rB);
 let bT=0;(function dB(){bCtx.clearRect(0,0,BW,BH);bT+=.006;
@@ -351,6 +356,10 @@ setTimeout(()=>document.querySelectorAll('.reveal').forEach(el=>el.classList.add
   menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open'))closeMenu();});
 })();
+</script>
+<script>
+(function(){document.querySelectorAll('a[href]').forEach(link=>{const href=link.getAttribute('href');if(!href||href.startsWith('#')||href.startsWith('mailto:')||href.startsWith('http')||link.target==='_blank')return;link.addEventListener('click',e=>{e.preventDefault();const w=document.querySelector('.page-wrap');if(w){w.style.transition='opacity 0.28s ease,transform 0.28s ease';w.style.opacity='0';w.style.transform='translateY(-6px)';}setTimeout(()=>window.location.href=href,280);});});})();
+(function(){const cv=document.createElement('canvas');cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;';document.body.appendChild(cv);const ctx=cv.getContext('2d');let W,H;function r(){W=cv.width=innerWidth;H=cv.height=innerHeight;}r();window.addEventListener('resize',r);let mx=-999,my=-999,ls=0;const pts=[];document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;const n=performance.now();if(n-ls>18){pts.push({x:mx,y:my,t:n});ls=n;}});document.addEventListener('mouseleave',()=>{mx=-999;});(function d(){requestAnimationFrame(d);ctx.clearRect(0,0,W,H);const n=performance.now(),L=420;for(let i=pts.length-1;i>=0;i--){const p=pts[i],age=n-p.t;if(age>L){pts.splice(i,1);continue;}const t=age/L,a=(1-t)*0.75,s=3.5*(1-t*0.85);ctx.beginPath();ctx.arc(p.x,p.y,s,0,Math.PI*2);ctx.fillStyle=`rgba(0,194,255,${a})`;ctx.fill();}if(mx>0){ctx.beginPath();ctx.arc(mx,my,3,0,Math.PI*2);ctx.fillStyle='rgba(0,194,255,0.95)';ctx.fill();}})();})();
 </script>
 
 </body>

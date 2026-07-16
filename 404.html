@@ -38,7 +38,7 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo img { height: 100px; display: block; }
-.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links { display: flex; gap: 40px; list-style: none; margin-left: auto; margin-right: 32px; }
 .nav-links a { font-size: 12px; font-weight: 400; letter-spacing: 0.06em; color: rgba(240,240,240,0.4); text-decoration: none; transition: color 0.2s; }
 .nav-links a:hover { color: var(--text); }
 .nav-contact { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: var(--blue); text-decoration: none; opacity: 0.75; }
@@ -125,10 +125,10 @@ footer { border-top: 1px solid var(--border); padding: 40px 56px; display: flex;
 </head>
 <body>
 
-<nav id="nav">
+<nav id="site-nav" class="scrolled">
   <a href="/" class="nav-logo"><img src="/logo.png" alt="Oryxon"></a>
   <ul class="nav-links">
-    <li><a href="/products/">Products</a></li>
+    <li><a href="/products/">Work</a></li>
     <li><a href="/mekina/">Mekina</a></li>
     <li><a href="/fitopia/">Fitopia</a></li>
     <li><a href="/about/">About</a></li>
@@ -142,7 +142,7 @@ footer { border-top: 1px solid var(--border); padding: 40px 56px; display: flex;
 
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
   <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation">&#x2715;</button>
-  <a href="/products/">Products</a>
+  <a href="/products/">Work</a>
   <a href="/mekina/">Mekina</a>
   <a href="/fitopia/">Fitopia</a>
   <a href="/about/">About</a>
@@ -163,17 +163,40 @@ footer { border-top: 1px solid var(--border); padding: 40px 56px; display: flex;
 <footer>
   <div class="footer-logo"><img src="/logo.png" alt="Oryxon"></div>
   <ul class="footer-links">
-    <li><a href="/products/">Products</a></li>
+    <li><a href="/products/">Work</a></li>
     <li><a href="/mekina/">Mekina</a></li>
     <li><a href="/fitopia/">Fitopia</a></li>
     <li><a href="/about/">About</a></li>
     <li><a href="/privacy/">Privacy</a></li>
     <li><a href="/terms/">Terms</a></li>
   </ul>
-  <div class="footer-copy">© 2026 Oryxon Ltd</div>
+  <div class="footer-copy">© 2025 Oryxon Ltd</div>
 </footer>
 
 <script>
+/* NAV SCROLL */
+(function(){
+  const nav=document.getElementById('site-nav');
+  if(!nav) return;
+  const s=document.createElement('div');
+  s.style.cssText='position:absolute;top:80px;height:1px;width:1px;pointer-events:none;';
+  document.body.prepend(s);
+  new IntersectionObserver(([e])=>{nav.classList.toggle('scrolled',!e.isIntersecting);}).observe(s);
+  nav.classList.add('scrolled');
+})();
+
+/* PAGE TRANSITIONS */
+(function(){
+  document.querySelectorAll('a[href]').forEach(link=>{
+    const href=link.getAttribute('href');
+    if(!href||href.startsWith('#')||href.startsWith('mailto:')||href.startsWith('http')||link.target==='_blank') return;
+    link.addEventListener('click',e=>{
+      e.preventDefault();
+      setTimeout(()=>window.location.href=href,280);
+    });
+  });
+})();
+
 (function(){
   var btn = document.getElementById('hamburger');
   var menu = document.getElementById('mobile-menu');
